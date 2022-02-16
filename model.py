@@ -2,6 +2,7 @@ from mesa import Model
 from agent import *
 from mesa.time import RandomActivation
 from mesa.space import *
+from orders import *
 
 class WarehouseModel(Model):
 	#This is the warehouse model works as the base controller to creat all of the robots
@@ -31,10 +32,11 @@ class WarehouseModel(Model):
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
 
+		GridContents = allocate_items_to_grid(width*height)
 		for Cellx in range(width):
 			for Celly in range(height):
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
-				newCell = Bin(cellReference, self, x = Cellx, y = Celly)
+				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = GridContents.pop(), stock = 1)
 				self.grid.place_agent(newCell, (newCell.x,newCell.y))
 
 	#Activates the scheduler to move all robots forward 1 step.

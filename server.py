@@ -22,8 +22,8 @@ def robot_cell_Apperance(agent):
 					 "Carrying": agent.holding,
 					 "text_color": "white",
 					 "Color": robotColour,
-					 "w": 0.3,
-					 "h": 0.3}
+					 "w": 0.5,
+					 "h": 0.5}
 	else:
 		name = agent.unique_id
 
@@ -31,7 +31,8 @@ def robot_cell_Apperance(agent):
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Reference":agent.unique_id,
-					 "Holding": agent.holding,
+					 "Contains": agent.contains,
+					 "Stock": agent.stock,
 					 "Color": 'grey',
 					 "w": 0.1,
 					 "h": 0.1}

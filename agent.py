@@ -54,7 +54,7 @@ class Robot(Agent):
 class Bin(Agent):
 	#Idea for how to implement letting the user mouseover a grid cell to see what gorcery item it is holding.
 
-	def __init__(self, unique_id, model, y, x):
+	def __init__(self, unique_id, model, x, y, contains, stock):
 		super().__init__(unique_id, model)
 
 		self.unique_id = unique_id
@@ -64,5 +64,6 @@ class Bin(Agent):
 
 		self.type = "Bin"
 
-		self.holding = 'Nothing'
+		self.contains = contains
+		self.stock = stock
 
