@@ -31,6 +31,12 @@ class WarehouseModel(Model):
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
 
+		for Cellx in range(width):
+			for Celly in range(height):
+				cellReference = (str(Cellx)+str(" ")+str(Celly))
+				newCell = Bin(cellReference, self, x = Cellx, y = Celly)
+				self.grid.place_agent(newCell, (newCell.x,newCell.y))
+
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.schedule.step()

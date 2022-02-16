@@ -9,6 +9,9 @@ class Robot(Agent):
 		#Unique ID
 		self.unique_id = unique_id
 
+		#Denotes Robot or Bin
+		self.type = "Robot"
+
 		#The robot is initated with random coordinates (for now)
 		#When the place robot function adds the robot to the grids it gives
 		#the robot a self.pos which is a tuple containing (x,y)
@@ -19,6 +22,7 @@ class Robot(Agent):
 		#Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
 		#Currently randomly chosen will be changed!
 		self.current_job = self.random.choice(['Collecting','Moving'])
+		self.holding = []
 		#Queue containing the tasks assigned to the robot in some implementations.
 		self.tasks = []
 
@@ -45,4 +49,20 @@ class Robot(Agent):
 		else:
 			self.newpos = (self.x,self.y)
 			self.model.grid.move_agent(self, self.newpos)
+
+
+class Bin(Agent):
+	#Idea for how to implement letting the user mouseover a grid cell to see what gorcery item it is holding.
+
+	def __init__(self, unique_id, model, y, x):
+		super().__init__(unique_id, model)
+
+		self.unique_id = unique_id
+
+		self.x = x
+		self.y = y
+
+		self.type = "Bin"
+
+		self.holding = 'Nothing'
 
