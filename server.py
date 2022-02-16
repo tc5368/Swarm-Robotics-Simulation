@@ -11,9 +11,11 @@ def robotApperance(agent):
 	else:
 		robotColour = 'red'
 
+	name = agent.unique_id
+
 	portrayal = {"Shape": "rect",
 				 "Filled": "true",
-				 "Layer": 0,
+				 "Layer": 'Robot',
 				 "Color": robotColour,
 				 "w": 0.5,
 				 "h": 0.5}
@@ -21,9 +23,9 @@ def robotApperance(agent):
 	return portrayal
 
 #Default values that controll the visulisation
-RobotCount = 500
+RobotCount = 5
 GridCellHeight = 100; GridCellWidth = 100;
-GridSizeHeight = 2000; GridSizeWidth = 2000;
+GridSizeHeight = 500; GridSizeWidth = 500;
 
 #Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
 grid = CanvasGrid(robotApperance, GridCellHeight, GridCellWidth, GridSizeHeight, GridSizeWidth)

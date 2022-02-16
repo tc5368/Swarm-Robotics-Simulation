@@ -17,5 +17,8 @@ Random points to consider later:
 
 - Add bias to try and make the robots travel in the most straight lines they can efficently.
 
-- At the moment hard limit on number of cells in the grid based on the number of grocery items. Make variable I.E 1 item type can be in multiple bins.
+Implemented - At the moment hard limit on number of cells in the grid based on the number of grocery items. Make variable I.E 1 item type can be in multiple bins.
 
+- Review: https://www.researchgate.net/profile/Erwin-Lejeune/publication/348716625_Survey_of_the_Multi-Agent_Pathfinding_Solutions/links/600c70f4a6fdccdcb8771555/Survey-of-the-Multi-Agent-Pathfinding-Solutions.pdf
+
+- Review: https://ojs.aaai.org/index.php/AAAI/article/view/4565
