@@ -15,4 +15,4 @@ Random points to consider later:
 
 - Click interaction with Mesa
 
-
+- Add bias to try and make the robots travel in the most straight lines they can efficently.

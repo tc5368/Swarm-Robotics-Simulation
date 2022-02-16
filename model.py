@@ -1,7 +1,7 @@
 from mesa import Model
 from agent import *
 from mesa.time import RandomActivation
-from mesa.space import MultiGrid
+from mesa.space import *
 
 class WarehouseModel(Model):
 	#This is the warehouse model works as the base controller to creat all of the robots
@@ -12,10 +12,14 @@ class WarehouseModel(Model):
 		#Number of robots in the warehouse
 		self.num_agents = robotCount
 		#The matrix that that is the warehouse floor.
+		#This needs to be changed to single grid to not allow multiple robots to enter the same space.
 		self.grid = MultiGrid(width, height, False)
 
 		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
 		self.schedule = RandomActivation(self)
+
+		#Agents that need to be killed off after they crash into the wall, will be removed.
+		self.kill_agents = []
 
 		# Creating the Robots
 		for i in range(self.num_agents):
@@ -30,3 +34,8 @@ class WarehouseModel(Model):
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.schedule.step()
+		for x in self.kill_agents:
+			#print('removing agent at ',x.pos)
+			self.grid.remove_agent(x)
+			self.schedule.remove(x)
+		self.kill_agents = []

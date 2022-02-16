@@ -10,8 +10,11 @@ class Robot(Agent):
 		self.unique_id = unique_id
 
 		#The robot is initated with random coordinates (for now)
-		self.y = y
+		#When the place robot function adds the robot to the grids it gives
+		#the robot a self.pos which is a tuple containing (x,y)
 		self.x = x
+		self.y = y
+
 
 		#Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
 		#Currently randomly chosen will be changed!
@@ -22,22 +25,24 @@ class Robot(Agent):
 		self.warehouseMaxY = gridInfo[0]-1
 		self.warehouseMaxX = gridInfo[1]-1
 
+		#If the agent is 'dead' and should be removed - not needed in final implementation
+		self.dead = False
+
 
 	def step(self):
-		print(self.x,self.y)
 
-		toMove = [self.x,self.y]
+		self.x, self.y = self.pos
+
 		if self.random.choice([True,False]):
-			self.x += self.random.randint(-1,1)
+			self.x += self.random.randint(0,1)
 		else:
-			self.y += self.random.randint(-1,1)
+			self.y += self.random.randint(0,1)
 
-		print(self.x,self.y)
-
-		if 0 == self.x > self.warehouseMaxX or 0 == self.y > self.warehouseMaxY:
-			print('triggers')
-			self.model.grid.remove_agent(self)
-
-		self.model.grid.move_agent(self,(self.x,self.y))
-		#print('I am bot %s and I am at x coord: %s' %(self.unique_id,self.x))
+		#print(self.pos)
+		if self.x > self.warehouseMaxX or self.y > self.warehouseMaxY or self.x <= 0 or self.y <= 0:
+			#print('triggers')
+			self.model.kill_agents.append(self)
+		else:
+			self.newpos = (self.x,self.y)
+			self.model.grid.move_agent(self, self.newpos)
 
