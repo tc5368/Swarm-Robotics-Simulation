@@ -16,3 +16,6 @@ Random points to consider later:
 - Click interaction with Mesa
 
 - Add bias to try and make the robots travel in the most straight lines they can efficently.
+
+- At the moment hard limit on number of cells in the grid based on the number of grocery items. Make variable I.E 1 item type can be in multiple bins.
+
