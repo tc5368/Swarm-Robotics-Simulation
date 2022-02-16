@@ -1,0 +1,18 @@
+Random points to consider later:
+
+
+- Second agent to be portrayed as greyed out cells to act as drop off / starting areas.
+
+- Simultaneous Activation vs Random Activation could be good to flip between the two for path finding implementations.
+
+- Read example final reports and see if should be writing report alongside project.
+
+- Research into how shortest path algorithms are used in a grid. Develop a shortest path algorithm example blue start red goal green search
+
+- Look into how to change click behaviour with Mesa
+
+- Look into how to change grid position on page
+
+- Click interaction with Mesa
+
+
