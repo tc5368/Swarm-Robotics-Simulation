@@ -25,8 +25,11 @@ class WarehouseModel(Model):
 
 		#Adding a starting cell to the grid, concept of robots being lowered on to the grid from above all 1 by 1.
 		#Cell 0 0 will always be the starting cell
-		startingCell = StartOffPoint('start',self)
-		self.grid.place_agent(startingCell,(startingCell.x, startingCell.y))
+		#
+		#Removed Temporarily discuss with supervisor.
+		#
+		# startingCell = StartOffPoint('start',self)
+		# self.grid.place_agent(startingCell,(startingCell.x, startingCell.y))
 
 
 		#Adding dropoff bins that will each represent 1 order to be filled.
@@ -41,8 +44,12 @@ class WarehouseModel(Model):
 		#Iterates over every cell in the grid
 		for Cellx in range(width-1):
 			for Celly in range(height):
-				if Cellx == 0 and Celly == 0:
-					continue
+
+				#Removed with start location being removed.
+				# if Cellx == 0 and Celly == 0:
+				# 	continue
+				
+
 				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
 				#Creates a new agent to sit in the cell as a marker
@@ -53,7 +60,16 @@ class WarehouseModel(Model):
 		# Creating the Robots
 		for i in range(self.num_agents):
 			#Creates the robots starting at random points on the warehouse floor.
-			x, y = startingCell.pos
+			#x, y = startingCell.pos
+			
+			#Loop to create the new robots and to add them into a grid cell that is empty
+			while True:
+				x = random.randint(0,width-2)
+				y = random.randint(0,height-1)
+				#When the random values find an empty grid cell break the loop and place the robot
+				if len(self.grid.get_cell_list_contents((x,y))) == 1:
+					break
+
 			newRobot = Robot(i, self, y = y, x = x,gridInfo=[height,width])
 			#Adds the new robot to the scheduler
 			self.schedule.add(newRobot)

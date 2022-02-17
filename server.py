@@ -63,9 +63,14 @@ def Apperance(agent):
 	return portrayal
 
 #Default values that controll the visulisation
-RobotCount = 1
+RobotCount = 20
 GridCellHeight = 10; GridCellWidth = 10;
-GridSizeHeight = 500; GridSizeWidth = 500;
+GridSizeHeight = 2000; GridSizeWidth = 2000;
+
+#Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
+if RobotCount >= GridCellHeight * (GridCellWidth-1):
+	print('Invalid Setup too many robots for the grid')
+	exit()
 
 #Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
 grid = CanvasGrid(Apperance, GridCellHeight, GridCellWidth, GridSizeHeight, GridSizeWidth)

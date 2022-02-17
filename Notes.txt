@@ -2,7 +2,9 @@ Random points to consider later:
 
 - Setup allowing robots to pickup and drop off items.
 
-- Third agent to be portrayed as greyed out cells to act as drop off / starting areas.
+- Fix orders, where there are less cells than possible grocery items then some orders will be impossible as might need items not anywhere in the grid.
+
+Implemented - Third agent to be portrayed as greyed out cells to act as drop off / starting areas.
 
 - Non traversable areas, I.E coloumns
 

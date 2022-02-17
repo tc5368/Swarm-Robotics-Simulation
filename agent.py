@@ -47,8 +47,18 @@ class Robot(Agent):
 		else:
 			self.y += self.random.randint(-1,1)
 
-		#print(self.pos)
-		if self.x > self.warehouseMaxX or self.y > self.warehouseMaxY or self.x <= 0 or self.y <= 0:
+		#If the robot would  be making a move to try and move off the grid instead dont move.
+		if self.x > self.warehouseMaxX:
+			self.x = self.warehouseMaxX
+		if self.y > self.warehouseMaxY:
+			self.y = self.warehouseMaxY 
+		if self.x < 0:
+			self.x = 0
+		if self.y < 0:
+			self.y = 0
+
+
+		if self.x > self.warehouseMaxX or self.y > self.warehouseMaxY or self.x < 0 or self.y < 0:
 			#print('triggers')
 			self.model.kill_agents.append(self)
 		else:
@@ -59,7 +69,8 @@ class Robot(Agent):
 	def pickupItem(self):
 		#Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
 		#It then calls the cell objects giveItem function and takes the output of that as it's new inventory.
-		self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
+		if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'Bin':
+			self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
 
 	def dropOff(self):
 		#To be finished
