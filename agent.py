@@ -104,11 +104,13 @@ class Bin(Agent):
 
 
 class StartOffPoint(Agent):
-	def __init__(self, model, x, y):
+	def __init__(self, unique_id, model):
 		super().__init__(unique_id, model)
 
-		self.x = x
-		self.y = y
+		#Starting cell will always be at 0,0
+		self.x = 0
+		self.y = 0
+		self.type = 'Start'
 
 class DropOffPoint(Agent):
 	def __init__(self, model, x, y):

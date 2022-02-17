@@ -22,11 +22,25 @@ class WarehouseModel(Model):
 		#Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
 
+
+		#Adding a starting cell to the grid, concept of robots being lowered on to the grid from above all 1 by 1.
+		#Cell 0 0 will always be the starting cell
+		startingCell = StartOffPoint('start',self)
+		self.grid.place_agent(startingCell,(startingCell.x, startingCell.y))
+
+
+		#Adding dropoff bins that will each represent 1 order to be filled.
+		#Idea to have the far right coloumn on the grid be all dropoff points.
+
+
+
 		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
 		GridContents = allocate_items_to_grid(width*height)
 		#Iterates over every cell in the grid
 		for Cellx in range(width):
 			for Celly in range(height):
+				if Cellx == 0 and Celly == 0:
+					continue
 				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
 				#Creates a new agent to sit in the cell as a marker
@@ -47,7 +61,9 @@ class WarehouseModel(Model):
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.schedule.step()
+
 		#Any agents marked for execution are summimarily killed here.
+		#For use in development no robots should be killed when working
 		for agent in self.kill_agents:
 			#print('removing agent at ',agent.pos)
 			self.grid.remove_agent(agent)

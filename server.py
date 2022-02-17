@@ -24,7 +24,7 @@ def Apperance(agent):
 					 "Color": robotColour,
 					 "w": 0.5,
 					 "h": 0.5}
-					 
+
 	elif agent.type == "Bin":
 		name = agent.unique_id
 
@@ -37,6 +37,16 @@ def Apperance(agent):
 					 "Color": 'grey',
 					 "w": 0.1,
 					 "h": 0.1}
+
+	elif agent.type == "Start":
+
+		portrayal = {"Shape": "rect",
+					 "Filled": "true",
+					 "Layer": 'WarehouseFloor',
+					 "Name": "Starting Point",
+					 "Color": 'black',
+					 "w": 1,
+					 "h": 1}
 
 
 	return portrayal
