@@ -4,7 +4,7 @@ from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 
 
-def robot_cell_Apperance(agent):
+def Apperance(agent):
 	#Changes the robots colour based on the task it is undertaking
 	if agent.type == "Robot":
 		if agent.current_job == 'Collecting':
@@ -24,7 +24,8 @@ def robot_cell_Apperance(agent):
 					 "Color": robotColour,
 					 "w": 0.5,
 					 "h": 0.5}
-	else:
+					 
+	elif agent.type == "Bin":
 		name = agent.unique_id
 
 		portrayal = {"Shape": "rect",
@@ -46,7 +47,7 @@ GridCellHeight = 10; GridCellWidth = 10;
 GridSizeHeight = 500; GridSizeWidth = 500;
 
 #Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
-grid = CanvasGrid(robot_cell_Apperance, GridCellHeight, GridCellWidth, GridSizeHeight, GridSizeWidth)
+grid = CanvasGrid(Apperance, GridCellHeight, GridCellWidth, GridSizeHeight, GridSizeWidth)
 
 #Startes the visuliation using the given model, sets the page title and the model starting settings.
 server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",{"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth})

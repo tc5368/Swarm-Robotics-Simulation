@@ -24,12 +24,15 @@ class WarehouseModel(Model):
 
 		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
 		GridContents = allocate_items_to_grid(width*height)
+		#Iterates over every cell in the grid
 		for Cellx in range(width):
 			for Celly in range(height):
+				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
+				#Creates a new agent to sit in the cell as a marker
 				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = GridContents.pop(), stock = 1)
+				#Places the cell agent into their place in the grid
 				self.grid.place_agent(newCell, (newCell.x,newCell.y))
-
 
 		# Creating the Robots
 		for i in range(self.num_agents):
@@ -44,8 +47,10 @@ class WarehouseModel(Model):
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.schedule.step()
-		for x in self.kill_agents:
-			#print('removing agent at ',x.pos)
-			self.grid.remove_agent(x)
-			self.schedule.remove(x)
+		#Any agents marked for execution are summimarily killed here.
+		for agent in self.kill_agents:
+			#print('removing agent at ',agent.pos)
+			self.grid.remove_agent(agent)
+			self.schedule.remove(agent)
+		#Once all agents are killed clear the to execute list
 		self.kill_agents = []

@@ -37,6 +37,8 @@ class Robot(Agent):
 
 		self.x, self.y = self.pos
 
+		#For testing will be removed, if the robot is carrying nothing then it
+		#will pickup the item held in the cell its currently in.
 		if self.holding == []:
 			self.pickupItem()
 
@@ -55,17 +57,21 @@ class Robot(Agent):
 
 
 	def pickupItem(self):
-		print('Picking up')
-
+		#Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
+		#It then calls the cell objects giveItem function and takes the output of that as it's new inventory.
 		self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
 
+	def dropOff(self):
+		#To be finished
+		print('Dropping')
 
 class Bin(Agent):
-	#Idea for how to implement letting the user mouseover a grid cell to see what gorcery item it is holding.
+	#Idea for how to implement letting the user mouseover a grid cell to see what grocery item it is holding.
 
 	def __init__(self, unique_id, model, x, y, contains, stock):
 		super().__init__(unique_id, model)
 
+		#Sets the attributes for the cell object
 		self.unique_id = unique_id
 
 		self.x = x
@@ -77,19 +83,41 @@ class Bin(Agent):
 		self.stock = stock
 
 	def giveItem(self):
+		#This function hands the an item from the contents of the bin to the robot in the same cell.
+		#it will then mark itself as empty if it gives away the last item it was holding.
+		
+		#If out of stock gives no item
 		if self.stock == 0:
 			return []
 
+		#If only 1 item left in stock gives it away and updates it's contents to empty
 		elif self.stock == 1:
 			self.stock -= 1
 			toGive = self.contains
 			self.contains = []
 			return toGive
-			
+
+		#If it has stock left will just give one item away and decremet the stock count
 		else:
 			self.stock -= 1
 			return [self.contains]
 
+
+class StartOffPoint(Agent):
+	def __init__(self, model, x, y):
+		super().__init__(unique_id, model)
+
+		self.x = x
+		self.y = y
+
+class DropOffPoint(Agent):
+	def __init__(self, model, x, y):
+		super().__init__(unique_id, model)
+
+		self.x = x
+		self.y = y
+
+		self.order = ''
 
 
 
