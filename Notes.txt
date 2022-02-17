@@ -1,7 +1,12 @@
 Random points to consider later:
 
+- Setup allowing robots to pickup and drop off items.
 
-- Second agent to be portrayed as greyed out cells to act as drop off / starting areas.
+- Third agent to be portrayed as greyed out cells to act as drop off / starting areas.
+
+- Non traversable areas, I.E coloumns
+
+- Stop allowing robots to enter the same space as one another.
 
 - Simultaneous Activation vs Random Activation could be good to flip between the two for path finding implementations.
 
@@ -9,7 +14,7 @@ Random points to consider later:
 
 - Research into how shortest path algorithms are used in a grid. Develop a shortest path algorithm example blue start red goal green search
 
-- Look into how to change click behaviour with Mesa
+Implemented - Look into how to change click behaviour with Mesa
 
 - Look into how to change grid position on page
 

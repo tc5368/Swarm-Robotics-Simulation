@@ -22,6 +22,15 @@ class WarehouseModel(Model):
 		#Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
 
+		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
+		GridContents = allocate_items_to_grid(width*height)
+		for Cellx in range(width):
+			for Celly in range(height):
+				cellReference = (str(Cellx)+str(" ")+str(Celly))
+				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = GridContents.pop(), stock = 1)
+				self.grid.place_agent(newCell, (newCell.x,newCell.y))
+
+
 		# Creating the Robots
 		for i in range(self.num_agents):
 			#Creates the robots starting at random points on the warehouse floor.
@@ -31,13 +40,6 @@ class WarehouseModel(Model):
 
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
-
-		GridContents = allocate_items_to_grid(width*height)
-		for Cellx in range(width):
-			for Celly in range(height):
-				cellReference = (str(Cellx)+str(" ")+str(Celly))
-				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = GridContents.pop(), stock = 1)
-				self.grid.place_agent(newCell, (newCell.x,newCell.y))
 
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):

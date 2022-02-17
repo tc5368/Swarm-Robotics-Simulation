@@ -37,10 +37,13 @@ class Robot(Agent):
 
 		self.x, self.y = self.pos
 
+		if self.holding == []:
+			self.pickupItem()
+
 		if self.random.choice([True,False]):
-			self.x += self.random.randint(0,1)
+			self.x += self.random.randint(-1,1)
 		else:
-			self.y += self.random.randint(0,1)
+			self.y += self.random.randint(-1,1)
 
 		#print(self.pos)
 		if self.x > self.warehouseMaxX or self.y > self.warehouseMaxY or self.x <= 0 or self.y <= 0:
@@ -49,6 +52,12 @@ class Robot(Agent):
 		else:
 			self.newpos = (self.x,self.y)
 			self.model.grid.move_agent(self, self.newpos)
+
+
+	def pickupItem(self):
+		print('Picking up')
+
+		self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
 
 
 class Bin(Agent):
@@ -66,4 +75,32 @@ class Bin(Agent):
 
 		self.contains = contains
 		self.stock = stock
+
+	def giveItem(self):
+		if self.stock == 0:
+			return []
+
+		elif self.stock == 1:
+			self.stock -= 1
+			toGive = self.contains
+			self.contains = []
+			return toGive
+			
+		else:
+			self.stock -= 1
+			return [self.contains]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

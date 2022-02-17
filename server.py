@@ -41,7 +41,7 @@ def robot_cell_Apperance(agent):
 	return portrayal
 
 #Default values that controll the visulisation
-RobotCount = 5
+RobotCount = 1
 GridCellHeight = 10; GridCellWidth = 10;
 GridSizeHeight = 500; GridSizeWidth = 500;
 
