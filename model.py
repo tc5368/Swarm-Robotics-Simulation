@@ -31,13 +31,15 @@ class WarehouseModel(Model):
 
 		#Adding dropoff bins that will each represent 1 order to be filled.
 		#Idea to have the far right coloumn on the grid be all dropoff points.
-
+		for i in range(height):
+			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=width-1, y=i, order=generate_order(3))
+			self.grid.place_agent(DropOffCell,(DropOffCell.x, DropOffCell.y))
 
 
 		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
 		GridContents = allocate_items_to_grid(width*height)
 		#Iterates over every cell in the grid
-		for Cellx in range(width):
+		for Cellx in range(width-1):
 			for Celly in range(height):
 				if Cellx == 0 and Celly == 0:
 					continue
@@ -51,7 +53,8 @@ class WarehouseModel(Model):
 		# Creating the Robots
 		for i in range(self.num_agents):
 			#Creates the robots starting at random points on the warehouse floor.
-			newRobot = Robot(i, self, y = self.random.randrange(height), x = self.random.randrange(width),gridInfo=[height,width])
+			x, y = startingCell.pos
+			newRobot = Robot(i, self, y = y, x = x,gridInfo=[height,width])
 			#Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
 

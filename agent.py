@@ -113,13 +113,15 @@ class StartOffPoint(Agent):
 		self.type = 'Start'
 
 class DropOffPoint(Agent):
-	def __init__(self, model, x, y):
+	def __init__(self, unique_id, model, x, y, order):
 		super().__init__(unique_id, model)
 
 		self.x = x
 		self.y = y
+		self.type = 'DropOff'
 
-		self.order = ''
+		self.order = order
+		self.contains = []
 
 
 

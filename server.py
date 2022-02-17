@@ -44,10 +44,21 @@ def Apperance(agent):
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Name": "Starting Point",
-					 "Color": 'black',
+					 "Color": 'green',
 					 "w": 1,
 					 "h": 1}
 
+	elif agent.type == "DropOff":
+
+		portrayal = {"Shape": "rect",
+					 "Filled": "true",
+					 "Layer": 'WarehouseFloor',
+					 "Reference": agent.unique_id,
+					 "Order": str(agent.order),
+					 "Contains": str(agent.contains),
+					 "Color": 'black',
+					 "w": 1,
+					 "h": 1}
 
 	return portrayal
 
