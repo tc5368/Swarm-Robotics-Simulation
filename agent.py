@@ -61,9 +61,14 @@ class Robot(Agent):
 		if self.x > self.warehouseMaxX or self.y > self.warehouseMaxY or self.x < 0 or self.y < 0:
 			#print('triggers')
 			self.model.kill_agents.append(self)
+
 		else:
-			self.newpos = (self.x,self.y)
-			self.model.grid.move_agent(self, self.newpos)
+			if len(self.model.grid.get_cell_list_contents((self.x, self.y))) == 1:
+				self.newpos = (self.x,self.y)
+				self.model.grid.move_agent(self, self.newpos)
+
+			else:
+				self.x,self.y = self.pos
 
 
 	def pickupItem(self):
