@@ -14,7 +14,7 @@ def allocate_items_to_grid(num_cells):
 
 def generate_order(number_of_items=10,maxStockperItem=3,maxNum=10):
 	if maxNum < len(grocery_items):
-		items = random.choices(grocery_items[0:maxNum-1],k=number_of_items)
+		items = random.choices(grocery_items[0:maxNum],k=number_of_items)
 	else:
 		items = random.choices(grocery_items,k=number_of_items)
 	items.sort()
@@ -23,4 +23,3 @@ def generate_order(number_of_items=10,maxStockperItem=3,maxNum=10):
 		order.update({item:random.randint(1,maxStockperItem)})
 
 	return(order)
-
