@@ -41,6 +41,8 @@ class Robot(Agent):
 		#will pickup the item held in the cell its currently in.
 		if self.holding == []:
 			self.pickupItem()
+		else:
+			self.dropOff()
 
 		if self.random.choice([True,False]):
 			self.x += self.random.randint(-1,1)
@@ -80,6 +82,10 @@ class Robot(Agent):
 	def dropOff(self):
 		#To be finished
 		print('Dropping')
+		if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'Bin':
+			if self.model.grid.get_cell_list_contents(self.pos)[0].recieveItem(self.holding[0]):
+				print('Cell accepted the item')
+				self.holding = []
 
 class Bin(Agent):
 	#Idea for how to implement letting the user mouseover a grid cell to see what grocery item it is holding.
@@ -111,12 +117,26 @@ class Bin(Agent):
 			self.stock -= 1
 			toGive = self.contains
 			self.contains = []
-			return toGive
+			return [toGive]
 
 		#If it has stock left will just give one item away and decremet the stock count
 		else:
 			self.stock -= 1
 			return [self.contains]
+
+	def recieveItem(self,item):
+
+		if self.contains == []:
+			self.contains = [item]
+			self.stock += 1
+			return True
+
+		elif item == self.contains[0]:
+			self.stock += 1
+			return True
+
+		else:
+			return False
 
 
 class StartOffPoint(Agent):

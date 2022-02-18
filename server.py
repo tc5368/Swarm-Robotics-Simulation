@@ -63,9 +63,9 @@ def Apperance(agent):
 	return portrayal
 
 #Default values that controll the visulisation
-RobotCount = 89
-GridCellHeight = 10; GridCellWidth = 10;
-GridSizeHeight = 2000; GridSizeWidth = 2000;
+RobotCount = 1
+GridCellHeight = 3; GridCellWidth = 3;
+GridSizeHeight = 500; GridSizeWidth = 500;
 
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
 if RobotCount >= GridCellHeight * (GridCellWidth-1):
