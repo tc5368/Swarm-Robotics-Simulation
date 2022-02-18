@@ -79,13 +79,15 @@ class Robot(Agent):
 		if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'Bin':
 			self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
 
+
 	def dropOff(self):
-		#To be finished
-		print('Dropping')
-		if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'Bin':
+		
+		#For dropping into a bin
+		if self.model.grid.get_cell_list_contents(self.pos)[0].type in ['Bin','DropOff']:
+			print(self.holding)
 			if self.model.grid.get_cell_list_contents(self.pos)[0].recieveItem(self.holding[0]):
-				print('Cell accepted the item')
 				self.holding = []
+
 
 class Bin(Agent):
 	#Idea for how to implement letting the user mouseover a grid cell to see what grocery item it is holding.
@@ -115,14 +117,14 @@ class Bin(Agent):
 		#If only 1 item left in stock gives it away and updates it's contents to empty
 		elif self.stock == 1:
 			self.stock -= 1
-			toGive = self.contains
+			toGive = self.contains[0]
 			self.contains = []
 			return [toGive]
 
 		#If it has stock left will just give one item away and decremet the stock count
 		else:
 			self.stock -= 1
-			return [self.contains]
+			return self.contains
 
 	def recieveItem(self,item):
 
@@ -139,14 +141,14 @@ class Bin(Agent):
 			return False
 
 
-class StartOffPoint(Agent):
-	def __init__(self, unique_id, model):
-		super().__init__(unique_id, model)
+# class StartOffPoint(Agent):
+# 	def __init__(self, unique_id, model):
+# 		super().__init__(unique_id, model)
 
-		#Starting cell will always be at 0,0
-		self.x = 0
-		self.y = 0
-		self.type = 'Start'
+# 		#Starting cell will always be at 0,0
+# 		self.x = 0
+# 		self.y = 0
+# 		self.type = 'Start'
 
 class DropOffPoint(Agent):
 	def __init__(self, unique_id, model, x, y, order):
@@ -157,7 +159,28 @@ class DropOffPoint(Agent):
 		self.type = 'DropOff'
 
 		self.order = order
-		self.contains = []
+		self.contains = {}
+		self.complete = False
+
+	def checkComplete(self):
+		if sorted(self.contains) == sorted(self.order):
+			return 'green'
+		else:
+			return 'black'
+
+	def recieveItem(self,item):
+
+		if item in self.order:			
+			if item in self.contains:
+				if self.order[item] < self.contains[item]:
+					self.contains.update({item:(self.contains[item]+1)})
+				else:
+					return False
+			else:
+				self.contains.update({item:1})
+			return True
+		else:
+			return False
 
 
 

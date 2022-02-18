@@ -56,7 +56,7 @@ def Apperance(agent):
 					 "Reference": agent.unique_id,
 					 "Order": str(agent.order),
 					 "Contains": str(agent.contains),
-					 "Color": 'black',
+					 "Color": agent.checkComplete(),
 					 "w": 1,
 					 "h": 1}
 
@@ -64,7 +64,7 @@ def Apperance(agent):
 
 #Default values that controll the visulisation
 RobotCount = 1
-GridCellHeight = 3; GridCellWidth = 3;
+GridCellHeight = 2; GridCellWidth = 2;
 GridSizeHeight = 500; GridSizeWidth = 500;
 
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.

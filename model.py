@@ -35,7 +35,7 @@ class WarehouseModel(Model):
 		#Adding dropoff bins that will each represent 1 order to be filled.
 		#Idea to have the far right coloumn on the grid be all dropoff points.
 		for i in range(height):
-			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=width-1, y=i, order=generate_order(3))
+			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=width-1, y=i, order=generate_order(3,1,(width*height-height)))
 			self.grid.place_agent(DropOffCell,(DropOffCell.x, DropOffCell.y))
 
 
@@ -53,7 +53,7 @@ class WarehouseModel(Model):
 				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
 				#Creates a new agent to sit in the cell as a marker
-				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = GridContents.pop(), stock = 1)
+				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = [GridContents.pop()], stock = 10)
 				#Places the cell agent into their place in the grid
 				self.grid.place_agent(newCell, (newCell.x,newCell.y))
 

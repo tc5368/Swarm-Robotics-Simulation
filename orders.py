@@ -6,18 +6,21 @@ grocery_items = ["tropical fruit","whole milk","pip fruit","other vegetables","r
 
 def allocate_items_to_grid(num_cells):
 	if num_cells < len(grocery_items):
-		grid = random.choices(grocery_items,k=num_cells)
+		grid = grocery_items[0:num_cells]
 	else:
 		grid = grocery_items + random.choices(grocery_items, k=num_cells-len(grocery_items))
 	grid.sort()
 	return grid
 
-def generate_order(number_of_items=10):
-	items = random.choices(grocery_items,k=number_of_items)
+def generate_order(number_of_items=10,maxStockperItem=3,maxNum=10):
+	if maxNum < len(grocery_items):
+		items = random.choices(grocery_items[0:maxNum-1],k=number_of_items)
+	else:
+		items = random.choices(grocery_items,k=number_of_items)
 	items.sort()
 	order = {}
 	for item in items:
-		order.update({item:random.randint(0,10)})
+		order.update({item:random.randint(1,maxStockperItem)})
 
 	return(order)
 
