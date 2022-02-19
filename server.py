@@ -62,9 +62,13 @@ def Apperance(agent):
 
 	return portrayal
 
-#Default values that controll the visulisation
-RobotCount = 1
-GridCellHeight = 2; GridCellWidth = 2;
+#Default values that control the visulisation can eventully be changed to sliders
+RobotCount = 10
+
+UniqueItems = 3
+MaxStockPerOrder = 3
+
+GridCellHeight = 10; GridCellWidth = 10;
 GridSizeHeight = 500; GridSizeWidth = 500;
 
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
@@ -76,7 +80,7 @@ if RobotCount >= GridCellHeight * (GridCellWidth-1):
 grid = CanvasGrid(Apperance, GridCellHeight, GridCellWidth, GridSizeHeight, GridSizeWidth)
 
 #Startes the visuliation using the given model, sets the page title and the model starting settings.
-server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",{"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth})
+server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",{"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth, "UniqueItems":UniqueItems,"MaxStockPerOrder":MaxStockPerOrder})
 
 #Launch the server
 server.port = 8521 # The default

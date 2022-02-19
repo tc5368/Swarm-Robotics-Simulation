@@ -1,14 +1,14 @@
 Random points to consider later:
 
-- Setup allowing robots to pickup and drop off items.
+Implemented - Setup allowing robots to pickup and drop off items.
 
-- Fix orders, where there are less cells than possible grocery items then some orders will be impossible as might need items not anywhere in the grid.
+Implemeneted - Fix orders, where there are less cells than possible grocery items then some orders will be impossible as might need items not anywhere in the grid.
 
 Implemented - Third agent to be portrayed as greyed out cells to act as drop off / starting areas.
 
 - Non traversable areas, I.E coloumns
 
-- Stop allowing robots to enter the same space as one another.
+Basic Implemented for random - Stop allowing robots to enter the same space as one another.
 
 - Simultaneous Activation vs Random Activation could be good to flip between the two for path finding implementations.
 
@@ -20,7 +20,7 @@ Implemented - Look into how to change click behaviour with Mesa
 
 - Look into how to change grid position on page
 
-- Click interaction with Mesa
+Implemented as hover over - Click interaction with Mesa
 
 - Add bias to try and make the robots travel in the most straight lines they can efficently.
 

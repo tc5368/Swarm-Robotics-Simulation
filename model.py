@@ -7,7 +7,7 @@ from orders import *
 class WarehouseModel(Model):
 	#This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, width, height):
+	def __init__(self, robotCount, width, height,UniqueItems,MaxStockPerOrder):
 		#Allows the model to continue to run.
 		self.running = True
 		#Number of robots in the warehouse
@@ -35,7 +35,7 @@ class WarehouseModel(Model):
 		#Adding dropoff bins that will each represent 1 order to be filled.
 		#Idea to have the far right coloumn on the grid be all dropoff points.
 		for i in range(height):
-			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=width-1, y=i, order=generate_order(3,1,((width*height)-height)))
+			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=width-1, y=i, order=generate_order(UniqueItems,MaxStockPerOrder,((width*height)-height)))
 			self.grid.place_agent(DropOffCell,(DropOffCell.x, DropOffCell.y))
 
 
