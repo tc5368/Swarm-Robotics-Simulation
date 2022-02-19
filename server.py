@@ -38,15 +38,15 @@ def Apperance(agent):
 					 "w": 0.1,
 					 "h": 0.1}
 
-	elif agent.type == "Start":
+	# elif agent.type == "Start":
 
-		portrayal = {"Shape": "rect",
-					 "Filled": "true",
-					 "Layer": 'WarehouseFloor',
-					 "Name": "Starting Point",
-					 "Color": 'green',
-					 "w": 1,
-					 "h": 1}
+	# 	portrayal = {"Shape": "rect",
+	# 				 "Filled": "true",
+	# 				 "Layer": 'WarehouseFloor',
+	# 				 "Name": "Starting Point",
+	# 				 "Color": 'green',
+	# 				 "w": 1,
+	# 				 "h": 1}
 
 	elif agent.type == "DropOff":
 
@@ -63,12 +63,12 @@ def Apperance(agent):
 	return portrayal
 
 #Default values that control the visulisation can eventully be changed to sliders
-RobotCount = 10
+RobotCount = 1
 
-UniqueItems = 3
-MaxStockPerOrder = 3
+UniqueItems = 2
+MaxStockPerOrder = 1
 
-GridCellHeight = 10; GridCellWidth = 10;
+GridCellHeight = 3; GridCellWidth = 3;
 GridSizeHeight = 500; GridSizeWidth = 500;
 
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.

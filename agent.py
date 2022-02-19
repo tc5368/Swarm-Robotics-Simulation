@@ -18,6 +18,7 @@ class Robot(Agent):
 		self.x = x
 		self.y = y
 
+		self.goal = None
 
 		#Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
 		#Currently randomly chosen will be changed!
@@ -37,17 +38,42 @@ class Robot(Agent):
 
 		self.x, self.y = self.pos
 
-		#For testing will be removed, if the robot is carrying nothing then it
-		#will pickup the item held in the cell its currently in.
+		#The robot picks up an item if it is not holding anything.
+		#Will then check all the open orders to see if the item it's holding is needed
+		#If it is listed in an open order then it will start to move the item towards the drop off
+		#the checkOpenOrders will update a self.goal which will be a (x,y) tuple.
+		#
+		#For initial testing this will be sufficent but already a problem will arise as multiple
+		#bots will try and carry a surplus of the items need to the drop off
+		#
+		#Need for the check open orders function to account for the stock ordered.
+		#Maybe some kind of allocation system would work better in the long run.
 		if self.holding == []:
 			self.pickupItem()
-		else:
-			self.dropOff()
+			if self.holding != []:
+				self.checkOpenOrders()
 
-		if self.random.choice([True,False]):
-			self.x += self.random.randint(-1,1)
+		#If the robot couldn't pick up an item and therefore has no goal will move randomly.
+		if self.goal == None:
+			if self.random.choice([True,False]):
+				self.x += self.random.randint(-1,1)
+			else:
+				self.y += self.random.randint(-1,1)
 		else:
-			self.y += self.random.randint(-1,1)
+
+			print('trying to get to ',self.goal,'from ',self.x,self.y)
+			if self.goal[0] > self.x:
+				self.x += 1
+			elif self.goal[0] < self.x:
+				self.x -= 1
+			elif self.goal[1] > self.y:
+				self.y += 1
+			elif self.goal[1] < self.y:
+				self.y -= 1
+
+			if self.pos == self.goal:
+				self.dropOff()
+				self.goal = None
 
 		#If the robot would  be making a move to try and move off the grid instead dont move.
 		if self.x > self.warehouseMaxX:
@@ -84,9 +110,25 @@ class Robot(Agent):
 		
 		#For dropping into a bin
 		if self.model.grid.get_cell_list_contents(self.pos)[0].type in ['Bin','DropOff']:
-			print(self.holding)
 			if self.model.grid.get_cell_list_contents(self.pos)[0].recieveItem(self.holding[0]):
 				self.holding = []
+
+	def checkOpenOrders(self):
+		for i in range(self.warehouseMaxY+1):
+			itemsNeeded = self.model.grid.get_cell_list_contents((self.warehouseMaxX,i))[0].lookingFor()
+			print('------------------')
+			print('robot holding: ',self.holding)
+			print('dropOff',i,'needs:',itemsNeeded)
+			print('------------------')
+			if self.holding[0] in itemsNeeded:
+				self.goal = (self.warehouseMaxX,i)
+				return True
+		self.burnItem()
+		return False
+
+	def burnItem(self):
+		#Just for testing
+		self.holding = []
 
 
 class Bin(Agent):
@@ -182,6 +224,15 @@ class DropOffPoint(Agent):
 		else:
 			return False
 
+	def lookingFor(self):
+		itemsNeeded = []
+		for item in self.order:
+			if item in self.contains:
+				if self.order[item] < self.contains[item]:
+					itemsNeeded.append(item)
+			else:
+				itemsNeeded.append(item)
+		return itemsNeeded
 
 
 
