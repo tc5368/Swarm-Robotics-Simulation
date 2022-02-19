@@ -40,7 +40,7 @@ class WarehouseModel(Model):
 
 
 		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
-		GridContents = allocate_items_to_grid(width*height)
+		GridContents = allocate_items_to_grid(((width*height)-height))
 		#Iterates over every cell in the grid
 		for Cellx in range(width-1):
 			for Celly in range(height):
