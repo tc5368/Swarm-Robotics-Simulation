@@ -49,9 +49,9 @@ class Robot(Agent):
 		#Need for the check open orders function to account for the stock ordered.
 		#Maybe some kind of allocation system would work better in the long run.
 		if self.holding == []:
-			self.pickupItem()
-			if self.holding != []:
-				self.checkOpenOrders()
+			hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0]
+			if hovering_over.type == 'Bin':
+				self.checkOpenOrders(hovering_over.peekItem())
 
 		#If the robot couldn't pick up an item and therefore has no goal will move randomly.
 		if self.goal == None:
@@ -107,23 +107,22 @@ class Robot(Agent):
 
 
 	def dropOff(self):
-		
 		#For dropping into a bin
 		if self.model.grid.get_cell_list_contents(self.pos)[0].type in ['Bin','DropOff']:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].recieveItem(self.holding[0]):
 				self.holding = []
 
-	def checkOpenOrders(self):
+	def checkOpenOrders(self,item):
 		for i in range(self.warehouseMaxY+1):
 			itemsNeeded = self.model.grid.get_cell_list_contents((self.warehouseMaxX,i))[0].lookingFor()
 			print('------------------')
-			print('robot holding: ',self.holding)
+			print('Currently over bin holding: ',item)
 			print('dropOff',i,'needs:',itemsNeeded)
 			print('------------------')
-			if self.holding[0] in itemsNeeded:
+			if item in itemsNeeded:
 				self.goal = (self.warehouseMaxX,i)
+				self.pickupItem()
 				return True
-		self.burnItem()
 		return False
 
 	def burnItem(self):
@@ -183,7 +182,7 @@ class Bin(Agent):
 			return False
 
 	def peekItem(self):
-		return self.contains
+		return self.contains[0]
 
 
 # class StartOffPoint(Agent):
