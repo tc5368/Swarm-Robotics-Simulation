@@ -182,6 +182,9 @@ class Bin(Agent):
 		else:
 			return False
 
+	def peekItem(self):
+		return self.contains
+
 
 # class StartOffPoint(Agent):
 # 	def __init__(self, unique_id, model):

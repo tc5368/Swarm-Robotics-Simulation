@@ -1,5 +1,7 @@
 Random points to consider later:
 
+Change the pickup item part to instead check if is an item is needed before picking it up.
+
 Implemented - Setup allowing robots to pickup and drop off items.
 
 Implemeneted - Fix orders, where there are less cells than possible grocery items then some orders will be impossible as might need items not anywhere in the grid.
