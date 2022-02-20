@@ -12,7 +12,6 @@ class WarehouseModel(Model):
 		self.running = True
 		#Number of robots in the warehouse
 		self.num_agents = robotCount
-		self.openJobs = []
 		#The matrix that that is the warehouse floor.
 		#This needs to be changed to single grid to not allow multiple robots to enter the same space.
 		
@@ -85,33 +84,11 @@ class WarehouseModel(Model):
 
 	def testComplete(self):
 		for i in range(self.height):
-			# print('Cell %s not complete' %i)
-			# print(self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete())
+			print('Cell %s not complete' %i)
+			print(self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete())
 			if self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete() == False:
 				return False
 		return True
-
-	def getItemLocation(self,item):
-		for Cellx in range(self.width-1):
-			for Celly in range(self.height):
-				checking = self.grid.get_cell_list_contents((Cellx,Celly))[0]
-				if checking.type == 'Bin':
-					if item == checking.peekItem():
-						return (Cellx,Celly)
-		else: 
-			return None
-
-	def getOpenJobs(self):
-		needed = []
-		for Celly in range(self.height):
-			gridCell = self.grid.get_cell_list_contents((self.width-1,Celly))[0]
-			if gridCell.type == 'DropOff': 
-				itemsNeeded = gridCell.lookingFor()
-				for item in itemsNeeded:
-					needed.append(item)
-		self.random.shuffle(needed)
-		self.openJobs = needed
-
 
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
@@ -119,9 +96,6 @@ class WarehouseModel(Model):
 
 		if self.testComplete():
 			self.running = False
-
-		self.getOpenJobs()
-		print(self.openJobs)
 
 		#Any agents marked for execution are summimarily killed here.
 		#For use in development no robots should be killed when working

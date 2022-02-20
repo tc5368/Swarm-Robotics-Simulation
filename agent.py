@@ -39,37 +39,27 @@ class Robot(Agent):
 
 		self.x, self.y = self.pos
 
-		if self.model.openJobs == []:
-			return
-
 		if self.busy == True:
 			self.moveTowardsGoal()
 
 		else:
-			print('picking up a Job:')
-			toCollect = self.model.openJobs.pop(0)
-			self.goal = self.model.getItemLocation(toCollect)
-			self.busy = True
-			self.moveTowardsGoal()
+			hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0]
+			if hovering_over.type == 'Bin':
+				overItem = hovering_over.peekItem()
 
-		# else:
-		# 	hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0]
-		# 	if hovering_over.type == 'Bin':
-		# 		overItem = hovering_over.peekItem()
+				print(overItem)
 
-		# 		print(overItem)
+				if self.checkOpenOrders(overItem):
 
-		# 		if self.checkOpenOrders(overItem):
+					print(overItem,'needed at ',self.goal)
 
-		# 			print(overItem,'needed at ',self.goal)
+					self.busy = True
+					self.moveTowardsGoal()
 
-		# 			self.busy = True
-		# 			self.moveTowardsGoal()
-
-		# 		else:
-		# 			self.moveRandom()
-		# 	else:
-		# 		self.moveRandom()
+				else:
+					self.moveRandom()
+			else:
+				self.moveRandom()
 
 		self.checkValidCoords()
 		self.checkCellEmpty()
@@ -111,16 +101,8 @@ class Robot(Agent):
 			self.y -= 1
 
 		if self.pos == self.goal:
-			if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
-				self.dropOff()
-				self.goal = None
-				self.busy = False
-			else:
-				hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
-				print('Found current Job item',hovering_over)
-				self.checkOpenOrders(hovering_over)
-				
-
+			self.dropOff()
+			self.goal = None
 
 	def pickupItem(self):
 		#Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
