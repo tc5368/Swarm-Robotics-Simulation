@@ -57,7 +57,6 @@ class WarehouseModel(Model):
 
 				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
-				print('adding cell',str(Cellx)+str(" ")+str(Celly))
 				#Creates a new agent to sit in the cell as a marker
 				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = [GridContents.pop()], stock = 100)
 				#Places the cell agent into their place in the grid
