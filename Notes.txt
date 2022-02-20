@@ -20,7 +20,7 @@ Implemented - Third agent to be portrayed as greyed out cells to act as drop off
 
 - Non traversable areas, I.E coloumns
 
-Basic Implemented for random - Stop allowing robots to enter the same space as one another.
+Implemented - Basic Implemented for random - Stop allowing robots to enter the same space as one another.
 
 - Simultaneous Activation vs Random Activation could be good to flip between the two for path finding implementations.
 
@@ -30,7 +30,7 @@ Basic Implemented for random - Stop allowing robots to enter the same space as o
 
 Implemented - Look into how to change click behaviour with Mesa
 
-- Look into how to change grid position on page
+Not pheasable - Look into how to change grid position on page
 
 Implemented as hover over - Click interaction with Mesa
 
