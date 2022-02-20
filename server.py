@@ -2,6 +2,7 @@ from model import *
 from agent import *
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
+from mesa.visualization.UserParam import UserSettableParameter
 
 
 def Apperance(agent):
@@ -67,24 +68,59 @@ def Apperance(agent):
 	return portrayal
 
 #Default values that control the visulisation can eventully be changed to sliders
-RobotCount = 3
-UniqueItemsPerOrder = 3
-MaxStockPerOrder = 3
+# RobotCount = 3
+# UniqueItemsPerOrder = 3
+# MaxStockPerOrder = 3
 
-GridCellHeight = 5; GridCellWidth = 5;
+# GridCellHeight = 5; GridCellWidth = 5;
+
+
+#Grid size cannot be changed while running.
+GridSize = 5
 GridSizeHeight = 500; GridSizeWidth = 500;
 
+#Added slides to be used but also for development will continue using default settings
+model_params = {
+    "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
+    "gridSize": GridSize,
+    "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
+    "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10)
+}
+
+
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
-if RobotCount >= GridCellHeight * (GridCellWidth-1):
-	print('Invalid Setup too many robots for the grid')
-	exit()
+# if model_params["robotCount"].value >= (model_params["gridSize"].value * (model_params["gridSize"].value-1)):
+# 	print('Invalid Setup too many robots for the grid')
+# 	exit()
+
 
 #Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
-grid = CanvasGrid(Apperance, GridCellHeight, GridCellWidth, GridSizeHeight, GridSizeWidth)
+grid = CanvasGrid(Apperance, model_params["gridSize"], model_params["gridSize"], GridSizeHeight, GridSizeWidth)
 
 #Startes the visuliation using the given model, sets the page title and the model starting settings.
-server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",{"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth, "UniqueItems":UniqueItemsPerOrder,"MaxStockPerOrder":MaxStockPerOrder})
+#
+#server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",{"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth, "UniqueItems":UniqueItemsPerOrder,"MaxStockPerOrder":MaxStockPerOrder})
+server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",model_params)
 
 #Launch the server
 server.port = 8521 # The default
 server.launch()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

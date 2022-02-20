@@ -7,17 +7,19 @@ from orders import *
 class WarehouseModel(Model):
 	#This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, width, height,UniqueItems,MaxStockPerOrder):
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder):
 		#Allows the model to continue to run.
 		self.running = True
 		#Number of robots in the warehouse
 		self.num_agents = robotCount
 		#The matrix that that is the warehouse floor.
 		#This needs to be changed to single grid to not allow multiple robots to enter the same space.
-		self.height = height
-		self.width = width
+		
+		self.width = gridSize
+		self.height = gridSize
 
-		self.grid = MultiGrid(width, height, False)
+
+		self.grid = MultiGrid(self.width, self.height, False)
 
 		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
 		self.schedule = RandomActivation(self)
@@ -37,16 +39,16 @@ class WarehouseModel(Model):
 
 		#Adding dropoff bins that will each represent 1 order to be filled.
 		#Idea to have the far right coloumn on the grid be all dropoff points.
-		for i in range(height):
-			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=width-1, y=i, order=generate_order(UniqueItems,MaxStockPerOrder,((width*height)-height)))
+		for i in range(self.height):
+			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=self.width-1, y=i, order=generate_order(UniqueItems,MaxStockPerOrder,((self.width*self.height)-self.height)))
 			self.grid.place_agent(DropOffCell,(DropOffCell.x, DropOffCell.y))
 
 
 		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
-		GridContents = allocate_items_to_grid(((width*height)-height))
+		GridContents = allocate_items_to_grid(((self.width*self.height)-self.height))
 		#Iterates over every cell in the grid
-		for Cellx in range(width-1):
-			for Celly in range(height):
+		for Cellx in range(self.width-1):
+			for Celly in range(self.height):
 
 				#Removed with start location being removed.
 				# if Cellx == 0 and Celly == 0:
@@ -55,6 +57,7 @@ class WarehouseModel(Model):
 
 				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
+				print('adding cell',str(Cellx)+str(" ")+str(Celly))
 				#Creates a new agent to sit in the cell as a marker
 				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = [GridContents.pop()], stock = 100)
 				#Places the cell agent into their place in the grid
@@ -67,13 +70,13 @@ class WarehouseModel(Model):
 			
 			#Loop to create the new robots and to add them into a grid cell that is empty
 			while True:
-				x = random.randint(0,width-2)
-				y = random.randint(0,height-1)
+				x = random.randint(0,self.width-2)
+				y = random.randint(0,self.height-1)
 				#When the random values find an empty grid cell break the loop and place the robot
 				if len(self.grid.get_cell_list_contents((x,y))) == 1:
 					break
 
-			newRobot = Robot(i, self, y = y, x = x,gridInfo=[height,width])
+			newRobot = Robot(i, self, y = y, x = x,gridInfo=[self.height,self.width])
 			#Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
 
