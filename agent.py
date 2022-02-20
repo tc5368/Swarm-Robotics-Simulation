@@ -20,6 +20,7 @@ class Robot(Agent):
 
 		self.goal = None
 		self.busy = False
+		self.deadLock = 5
 
 		#Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
 		#Currently randomly chosen will be changed!
@@ -37,18 +38,24 @@ class Robot(Agent):
 
 	def step(self):
 
+		print('------------------------')
+
 		self.x, self.y = self.pos
 
 		if self.model.openJobs == []:
 			return
 
-		if self.busy == True:
+		if self.deadLock <= 0:
+			print('deadlock detected')
+			self.moveRandom()
+
+		elif self.busy == True:
 			self.moveTowardsGoal()
 
 		else:
-			print('picking up a Job:')
 			toCollect = self.model.openJobs.pop(0)
 			self.goal = self.model.getItemLocation(toCollect)
+			print('picking up a Job:',self.goal)
 			self.busy = True
 			self.moveTowardsGoal()
 
@@ -73,10 +80,19 @@ class Robot(Agent):
 
 		self.checkValidCoords()
 		self.checkCellEmpty()
+		self.checkDeadLock()
 		self.moveRobot()
 
+	def checkDeadLock(self):
+		print(self.x, self.y, self.pos,(self.x, self.y) == self.pos)
+		if (self.x, self.y) == self.pos:
+			self.deadLock -= 1
+		else:
+			self.deadLock = 5
+		print(self.deadLock)
 
 	def moveRobot(self):
+		print('moving to ',self.x,self.y,'from ',self.pos)
 		self.model.grid.move_agent(self, (self.x, self.y))
 
 	def checkValidCoords(self):
@@ -94,32 +110,36 @@ class Robot(Agent):
 			self.x,self.y = self.pos
 
 	def moveRandom(self):
+		print('trying to move randomly to break lock')
 		if self.random.choice([True,False]):
 			self.x += self.random.randint(-1,1)
 		else:
 			self.y += self.random.randint(-1,1)
+		print('randomly trying:',self.x,self.y,'from ',self.pos)
 
 	def moveTowardsGoal(self):
-		print('trying to get to ',self.goal,'from ',self.x,self.y)
+
+		print('trying to get to goal: ',self.goal,'from ',self.x,self.y)
+		
+		if self.goal[1] > self.y:
+			self.y += 1
+		elif self.goal[1] < self.y:
+			self.y -= 1
 		if self.goal[0] > self.x:
 			self.x += 1
 		elif self.goal[0] < self.x:
 			self.x -= 1
-		elif self.goal[1] > self.y:
-			self.y += 1
-		elif self.goal[1] < self.y:
-			self.y -= 1
 
 		if self.pos == self.goal:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
 				self.dropOff()
+				print('item dropped off at goal, deleting goal')
 				self.goal = None
 				self.busy = False
 			else:
 				hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
-				print('Found current Job item',hovering_over)
+				#print('Found current Job item',hovering_over)
 				self.checkOpenOrders(hovering_over)
-				
 
 
 	def pickupItem(self):
@@ -147,7 +167,10 @@ class Robot(Agent):
 				self.goal = (self.warehouseMaxX,i)
 				self.pickupItem()
 				return True
+		print('Robot current goal',self.goal,item)
 		self.goal = None
+		self.busy = False
+		print('goal removed')
 		return False
 
 	def burnItem(self):

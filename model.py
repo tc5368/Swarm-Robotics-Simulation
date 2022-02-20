@@ -103,6 +103,7 @@ class WarehouseModel(Model):
 
 	def getOpenJobs(self):
 		needed = []
+		self.openJobs = []
 		for Celly in range(self.height):
 			gridCell = self.grid.get_cell_list_contents((self.width-1,Celly))[0]
 			if gridCell.type == 'DropOff': 
@@ -110,7 +111,8 @@ class WarehouseModel(Model):
 				for item in itemsNeeded:
 					needed.append(item)
 		self.random.shuffle(needed)
-		self.openJobs = needed
+		for i in needed:
+			self.openJobs.append(i)
 
 
 	#Activates the scheduler to move all robots forward 1 step.
@@ -121,7 +123,7 @@ class WarehouseModel(Model):
 			self.running = False
 
 		self.getOpenJobs()
-		print(self.openJobs)
+		#print(self.openJobs)
 
 		#Any agents marked for execution are summimarily killed here.
 		#For use in development no robots should be killed when working
