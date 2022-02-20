@@ -14,6 +14,9 @@ class WarehouseModel(Model):
 		self.num_agents = robotCount
 		#The matrix that that is the warehouse floor.
 		#This needs to be changed to single grid to not allow multiple robots to enter the same space.
+		self.height = height
+		self.width = width
+
 		self.grid = MultiGrid(width, height, False)
 
 		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
@@ -77,9 +80,20 @@ class WarehouseModel(Model):
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
 
+	def testComplete(self):
+		for i in range(self.height):
+			print('Cell %s not complete' %i)
+			print(self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete())
+			if self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete() == False:
+				return False
+		return True
+
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.schedule.step()
+
+		if self.testComplete():
+			self.running = False
 
 		#Any agents marked for execution are summimarily killed here.
 		#For use in development no robots should be killed when working
@@ -89,3 +103,5 @@ class WarehouseModel(Model):
 			self.schedule.remove(agent)
 		#Once all agents are killed clear the to execute list
 		self.kill_agents = []
+
+

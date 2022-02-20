@@ -1,6 +1,14 @@
 Random points to consider later:
 
-Change the pickup item part to instead check if is an item is needed before picking it up.
+Robots put excess items back where they are from
+
+Add allocation to give the robot the location to pick the next item up from.
+
+Add graphing to show the number of items moved
+
+Add sliders to the visulisation for the input settings
+
+Implemented - Change the pickup item part to instead check if is an item is needed before picking it up.
 
 Implemented - Setup allowing robots to pickup and drop off items.
 

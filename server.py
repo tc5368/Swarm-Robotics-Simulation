@@ -50,20 +50,24 @@ def Apperance(agent):
 
 	elif agent.type == "DropOff":
 
+		colour = 'black'
+		if agent.checkComplete():
+			colour = 'green'
+
 		portrayal = {"Shape": "rect",
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Reference": agent.unique_id,
 					 "Order": str(agent.order),
 					 "Contains": str(agent.contains),
-					 "Color": agent.checkComplete(),
+					 "Color": colour,
 					 "w": 1,
 					 "h": 1}
 
 	return portrayal
 
 #Default values that control the visulisation can eventully be changed to sliders
-RobotCount = 1
+RobotCount = 3
 UniqueItemsPerOrder = 3
 MaxStockPerOrder = 3
 
