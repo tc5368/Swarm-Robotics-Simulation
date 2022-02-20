@@ -1,5 +1,7 @@
 Random points to consider later:
 
+Robots being called to get outstanding items.
+
 Robots put excess items back where they are from
 
 Add allocation to give the robot the location to pick the next item up from.
