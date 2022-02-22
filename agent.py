@@ -24,7 +24,6 @@ class Robot(Agent):
 
 		#Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
 		#Currently randomly chosen will be changed!
-		self.current_job = self.random.choice(['Collecting','Moving'])
 		self.holding = []
 		#Queue containing the tasks assigned to the robot in some implementations.
 		self.tasks = []
@@ -38,7 +37,7 @@ class Robot(Agent):
 
 	def step(self):
 
-		print('------------------------')
+		#print('------------------------')
 
 		self.x, self.y = self.pos
 
@@ -46,7 +45,7 @@ class Robot(Agent):
 			return
 
 		if self.deadLock <= 0:
-			print('deadlock detected')
+			#print('deadlock detected')
 			self.moveRandom()
 
 		elif self.busy == True:
@@ -55,7 +54,7 @@ class Robot(Agent):
 		else:
 			toCollect = self.model.openJobs.pop(0)
 			self.goal = self.model.getItemLocation(toCollect)
-			print('picking up a Job:',self.goal)
+			#print('picking up a Job:',self.goal)
 			self.busy = True
 			self.moveTowardsGoal()
 
@@ -84,15 +83,15 @@ class Robot(Agent):
 		self.moveRobot()
 
 	def checkDeadLock(self):
-		print(self.x, self.y, self.pos,(self.x, self.y) == self.pos)
+		#print(self.x, self.y, self.pos,(self.x, self.y) == self.pos)
 		if (self.x, self.y) == self.pos:
 			self.deadLock -= 1
 		else:
 			self.deadLock = 5
-		print(self.deadLock)
+		#print(self.deadLock)
 
 	def moveRobot(self):
-		print('moving to ',self.x,self.y,'from ',self.pos)
+		#print('moving to ',self.x,self.y,'from ',self.pos)
 		self.model.grid.move_agent(self, (self.x, self.y))
 
 	def checkValidCoords(self):
@@ -110,36 +109,52 @@ class Robot(Agent):
 			self.x,self.y = self.pos
 
 	def moveRandom(self):
-		print('trying to move randomly to break lock')
+		#print('trying to move randomly to break lock')
 		if self.random.choice([True,False]):
 			self.x += self.random.randint(-1,1)
 		else:
 			self.y += self.random.randint(-1,1)
-		print('randomly trying:',self.x,self.y,'from ',self.pos)
+		#print('randomly trying:',self.x,self.y,'from ',self.pos)
 
 	def moveTowardsGoal(self):
 
-		print('trying to get to goal: ',self.goal,'from ',self.x,self.y)
+		#print('trying to get to goal: ',self.goal,'from ',self.x,self.y)
 		
-		if self.goal[1] > self.y:
-			self.y += 1
-		elif self.goal[1] < self.y:
-			self.y -= 1
-		if self.goal[0] > self.x:
-			self.x += 1
-		elif self.goal[0] < self.x:
-			self.x -= 1
-
+		#Moving diagonally... Need to remove.
+		#
+		#Could add bias here, can work out a x,y vector and then change the probability of which direction to go based on the angle of the vector.
+		#
 		if self.pos == self.goal:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
 				self.dropOff()
-				print('item dropped off at goal, deleting goal')
+				#print('item dropped off at goal, deleting goal')
 				self.goal = None
 				self.busy = False
 			else:
 				hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
 				#print('Found current Job item',hovering_over)
 				self.checkOpenOrders(hovering_over)
+
+		else:
+			directionVec = (abs(self.goal[0] - self.x), abs(self.goal[1] - self.y))
+			#print(self.goal)
+			#print(self.pos)
+			prob_x = directionVec[0]/(directionVec[0]+directionVec[1])
+			prob_y = directionVec[1]/(directionVec[0]+directionVec[1])
+			#print(prob_x,prob_y)
+			direction = self.model.random.choices([True,False],(prob_x,prob_y))[0]
+			#print(direction)
+
+			if direction:
+				if self.goal[0] > self.x:
+					self.x += 1
+				elif self.goal[0] < self.x:
+					self.x -= 1
+			else:
+				if self.goal[1] > self.y:
+					self.y += 1
+				elif self.goal[1] < self.y:
+					self.y -= 1
 
 
 	def pickupItem(self):
@@ -167,10 +182,10 @@ class Robot(Agent):
 				self.goal = (self.warehouseMaxX,i)
 				self.pickupItem()
 				return True
-		print('Robot current goal',self.goal,item)
+		#print('Robot current goal',self.goal,item)
 		self.goal = None
 		self.busy = False
-		print('goal removed')
+		#print('goal removed')
 		return False
 
 	def burnItem(self):

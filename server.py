@@ -8,7 +8,7 @@ from mesa.visualization.UserParam import UserSettableParameter
 def Apperance(agent):
 	#Changes the robots colour based on the task it is undertaking
 	if agent.type == "Robot":
-		if agent.current_job == 'Collecting':
+		if agent.holding == []:
 			robotColour = 'blue'
 		else:
 			robotColour = 'red'
@@ -19,7 +19,6 @@ def Apperance(agent):
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Number":agent.unique_id,
-					 "Job": agent.current_job,
 					 "Carrying": agent.holding,
 					 "text_color": "white",
 					 "Color": robotColour,
@@ -68,16 +67,16 @@ def Apperance(agent):
 	return portrayal
 
 #Grid size cannot be changed while running.
-GridSize = 12
+GridSize = 20
 GridSizeHeight = 500; GridSizeWidth = 500;
 
 
 #Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 10,
+	"robotCount" : 20,
 	"gridSize" : GridSize,
 	"UniqueItems" : 5,
-	"MaxStockPerOrder" : 10
+	"MaxStockPerOrder" :5
 }
 
 
