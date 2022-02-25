@@ -21,5 +21,4 @@ def generate_order(number_of_items=10,maxStockperItem=3,maxNum=10):
 	order = {}
 	for item in items:
 		order.update({item:random.randint(1,maxStockperItem)})
-
 	return(order)

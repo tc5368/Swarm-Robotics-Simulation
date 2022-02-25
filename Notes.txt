@@ -1,4 +1,7 @@
 Random points to consider later:
+---------------
+Force CLosing socket command: lsof -i:8521
+---------------
 
 Notes from Meeting with Balin:
 	- Improve the visulisation, have icons in the grid cells
