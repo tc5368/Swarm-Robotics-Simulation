@@ -275,6 +275,18 @@ class DropOffPoint(Agent):
 		else:
 			return False
 
+	def getPercentageDone(self):
+
+		colorOutput = []
+		numberTotal = sum(self.order.values())
+		numberHolding = sum(self.contains.values())
+
+		for i in range(numberHolding):
+			colorOutput.append('#FFFF00')
+		for i in range(numberTotal - numberHolding):
+			colorOutput.append('#000000')
+		return colorOutput
+
 	def recieveItem(self,item):
 		# print('Checking if can recieve ',item,'into',self.contains,'with order',self.order)
 		if item in self.order:			

@@ -48,9 +48,14 @@ def Apperance(agent):
 
 	elif agent.type == "DropOff":
 
-		colour = 'black'
 		if agent.checkComplete():
-			colour = 'green'
+			dropOffColour = "Green"
+		else:
+			dropOffColour = agent.getPercentageDone()
+
+		#this.drawRectangle in the mesa library only draws diagonaly gradients, can try and turn to use only horizontal
+		#need to just change line 159 so it uses y1 = 0 not y1=y0+cellHeight
+
 
 		portrayal = {"Shape": "rect",
 					 "Filled": "true",
@@ -58,7 +63,7 @@ def Apperance(agent):
 					 "Reference": agent.unique_id,
 					 "Order": str(agent.order),
 					 "Contains": str(agent.contains),
-					 "Color": colour,
+					 "Color": dropOffColour,
 					 "w": 1,
 					 "h": 1}
 
@@ -69,22 +74,22 @@ GridSize = 20
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 
-#Default values that control the visulisation can eventully be changed to sliders
-# model_params = {
-# 	"robotCount" : 15,
-# 	"gridSize" : GridSize,
-# 	"UniqueItems" : 5,
-# 	"MaxStockPerOrder" :2
-# }
+# Default values that control the visulisation can eventully be changed to sliders
+model_params = {
+	"robotCount" : 15,
+	"gridSize" : GridSize,
+	"UniqueItems" : 5,
+	"MaxStockPerOrder" :2
+}
 
 
 # Added slides to be used but also for development will continue using default settings
-model_params = {
-    "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
-    "gridSize": GridSize,
-    "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
-    "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10)
-}
+# model_params = {
+#     "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
+#     "gridSize": GridSize,
+#     "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
+#     "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10)
+# }
 
 
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
