@@ -9,19 +9,17 @@ def Apperance(agent):
 	#Changes the robots colour based on the task it is undertaking
 	if agent.type == "Robot":
 		if agent.holding == []:
-			robotColour = 'blue'
+			robotImage = 'resources/Robot.png'
 		else:
-			robotColour = 'red'
+			robotImage = 'resources/Robot Busy.png'
 
 		name = agent.unique_id
 
-		portrayal = {"Shape": "rect",
+		portrayal = {"Shape": robotImage,
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Number":agent.unique_id,
 					 "Carrying": agent.holding,
-					 "text_color": "white",
-					 "Color": robotColour,
 					 "w": 0.5,
 					 "h": 0.5}
 
@@ -68,7 +66,7 @@ def Apperance(agent):
 
 #Grid size cannot be changed while running.
 GridSize = 20
-GridSizeHeight = 500; GridSizeWidth = 500;
+GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 
 #Default values that control the visulisation can eventully be changed to sliders
