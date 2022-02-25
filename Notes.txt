@@ -3,6 +3,29 @@ Random points to consider later:
 Force CLosing socket command: lsof -i:8521
 ---------------
 
+
+-----------
+
+Idea for developing a path finding algorithm.
+
+The grid cells will have an allocation table attribute
+robots can bid for control of the cell "the random activation of mesa will bid"
+from there the robots will be able to set their route so cell (8,9) in 1 turn, cell (9,9) in 2 turns.
+that way another bot can still use cell (9,9) in 1 turns time but they need to have left by the turn after.
+Might cause issues with the random activation synchronisation.
+
+
+
+
+
+
+
+
+
+
+
+
+
 Notes from Meeting with Balin:
 	- Improve the visulisation, have icons in the grid cells
 	- Improve the way of getting information into the blank space on the right of the grid
