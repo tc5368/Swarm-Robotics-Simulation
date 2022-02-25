@@ -35,8 +35,8 @@ def Apperance(agent):
 					 "Contains": agent.contains,
 					 "Stock": agent.stock,
 					 "Color": 'grey',
-					 "w": 0.1,
-					 "h": 0.1}
+					 "w": 0.0,
+					 "h": 0.0}
 
 	# elif agent.type == "Start":
 
@@ -72,21 +72,21 @@ GridSizeHeight = 500; GridSizeWidth = 500;
 
 
 #Default values that control the visulisation can eventully be changed to sliders
-model_params = {
-	"robotCount" : 20,
-	"gridSize" : GridSize,
-	"UniqueItems" : 5,
-	"MaxStockPerOrder" :5
-}
-
-
-#Added slides to be used but also for development will continue using default settings
 # model_params = {
-#     "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
-#     "gridSize": GridSize,
-#     "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
-#     "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10)
+# 	"robotCount" : 15,
+# 	"gridSize" : GridSize,
+# 	"UniqueItems" : 5,
+# 	"MaxStockPerOrder" :2
 # }
+
+
+# Added slides to be used but also for development will continue using default settings
+model_params = {
+    "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
+    "gridSize": GridSize,
+    "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
+    "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10)
+}
 
 
 #Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.

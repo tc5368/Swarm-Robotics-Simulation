@@ -1,6 +1,11 @@
 Random points to consider later:
 
-
+Notes from Meeting with Balin:
+	- Improve the visulisation, have icons in the grid cells
+	- Improve the way of getting information into the blank space on the right of the grid
+	- Research and implement path finding algorithms.
+	- Add way of user selecting the type of path finding algorithm to use
+	- Add graphing to the page.
 
 Implemeneted - Robots being called to get outstanding items.
 
