@@ -76,7 +76,7 @@ GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 15,
+	"robotCount" : 10,
 	"gridSize" : GridSize,
 	"UniqueItems" : 5,
 	"MaxStockPerOrder" :2
