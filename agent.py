@@ -34,16 +34,47 @@ class Robot(Agent):
 		#If the agent is 'dead' and should be removed - not needed in final implementation
 		self.dead = False
 
+		self.plannedRoute = []
+
 
 	def step(self):
 
-		#print('------------------------')
-
 		self.x, self.y = self.pos
 
+		#Checks if there is anything left for the robot to do.
 		if self.model.openJobs == []:
+			#if not just returns nothing and moves on to the next robot
 			return
 
+		if self.model.pathFindingType == 'Blind Goal':
+			self.blindPathFinding()
+		elif self.model.pathFindingType == 'Central Control':
+			self.pathBidding()
+
+	def pathBidding(self):
+
+		#idea with this approach is that only the first bot will get an optimal route
+		#and each robot after them will get a slightly less optimal route. This is by bidding
+		#on grid cells that they will need in coming turns.
+		print('V------------------------V')
+		if self.plannedRoute != []:
+			print('Route in place',self.plannedRoute)
+			self.advanceRoute()
+		else:
+			print('No Route, getting new goal')
+			toCollect = self.model.openJobs.pop(0)
+			self.goal = self.model.getItemLocation(toCollect)
+			print(toCollect)
+			print(self.goal)
+			self.model.centralControl.update({self:self.goal})
+		print('^------------------------^')
+			
+
+	def advanceRoute(self):
+		self.x, self.y = self.plannedRoute.pop(0)
+		self.moveRobot()
+
+	def blindPathFinding(self):
 		if self.deadLock <= 0:
 			#print('deadlock detected')
 			self.moveRandom()
@@ -57,25 +88,6 @@ class Robot(Agent):
 			#print('picking up a Job:',self.goal)
 			self.busy = True
 			self.moveTowardsGoal()
-
-		# else:
-		# 	hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0]
-		# 	if hovering_over.type == 'Bin':
-		# 		overItem = hovering_over.peekItem()
-
-		# 		print(overItem)
-
-		# 		if self.checkOpenOrders(overItem):
-
-		# 			print(overItem,'needed at ',self.goal)
-
-		# 			self.busy = True
-		# 			self.moveTowardsGoal()
-
-		# 		else:
-		# 			self.moveRandom()
-		# 	else:
-		# 		self.moveRandom()
 
 		self.checkValidCoords()
 		self.checkCellEmpty()

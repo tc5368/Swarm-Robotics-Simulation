@@ -1,13 +1,13 @@
 from mesa import Model
 from agent import *
-from mesa.time import RandomActivation
+from mesa.time import RandomActivation, SimultaneousActivation
 from mesa.space import *
 from orders import *
 
 class WarehouseModel(Model):
 	#This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder):
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType):
 		#Allows the model to continue to run.
 		self.running = True
 		#Number of robots in the warehouse
@@ -19,15 +19,20 @@ class WarehouseModel(Model):
 		self.width = gridSize
 		self.height = gridSize
 
+		self.pathFindingType = pathFindingType
 
 		self.grid = MultiGrid(self.width, self.height, False)
 
 		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
-		self.schedule = RandomActivation(self)
+		if self.pathFindingType in ['Blind Goal']:
+			self.schedule = RandomActivation(self)
+		else:
+			self.schedule = SimultaneousActivation(self)
 
 		#Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
 
+		self.centralControl = {}
 
 		#Adding a starting cell to the grid, concept of robots being lowered on to the grid from above all 1 by 1.
 		#Cell 0 0 will always be the starting cell
@@ -115,9 +120,39 @@ class WarehouseModel(Model):
 			self.openJobs.append(i)
 
 
+	def planPath(self,start,end):
+		d_x = abs(end[0] - start[0])
+		d_y = abs(end[1] - start[1])
+		direction = self.random.choices([True,False],(d_x,d_y))[0]
+
+		next_x = 0
+
+		if direction:
+			if start[0] > end[0]:
+				next_x == 1
+			elif self.goal[0] < self.x:
+				next_x -= 1
+		else:
+			if self.goal[1] > self.y:
+				next_y += 1
+			elif self.goal[1] < self.y:	
+				next_y -= 1
+
+
+
+
+	def planRoutes(self):
+		for i in self.centralControl:
+			print(i.unique_id,i.pos,self.centralControl[i])
+			self.planPath(i.pos,self.centralControl[i])
+
+
+
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.schedule.step()
+
+		self.planRoutes()
 
 		if self.testComplete():
 			self.running = False
