@@ -25,16 +25,17 @@ def Apperance(agent):
 
 	elif agent.type == "Bin":
 		name = agent.unique_id
+		formattedItem = str(agent.contains[0]).replace(' ','').replace('/','')
+		bin_image = "resources/"+formattedItem+".png"
 
-		portrayal = {"Shape": "rect",
+		portrayal = {"Shape": bin_image,
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Reference":agent.unique_id,
 					 "Contains": agent.contains,
 					 "Stock": agent.stock,
 					 "Color": 'grey',
-					 "w": 0.0,
-					 "h": 0.0}
+					 "scale": 0.5}
 
 	# elif agent.type == "Start":
 
@@ -70,13 +71,13 @@ def Apperance(agent):
 	return portrayal
 
 #Grid size cannot be changed while running.
-GridSize = 20
+GridSize = 10
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 10,
+	"robotCount" : 2,
 	"gridSize" : GridSize,
 	"UniqueItems" : 5,
 	"MaxStockPerOrder" :2

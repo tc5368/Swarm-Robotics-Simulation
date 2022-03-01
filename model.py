@@ -82,6 +82,7 @@ class WarehouseModel(Model):
 
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
+			self.step()
 
 	def testComplete(self):
 		for i in range(self.height):
