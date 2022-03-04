@@ -3,7 +3,7 @@ from mesa import Agent
 class Robot(Agent):
 	#This is the robot agent that moves around the grid fufilling customer orders.
 
-	def __init__(self, unique_id, model, y, x, gridInfo):
+	def __init__(self, unique_id, model, y, x, gridInfo,pathFindingType):
 		super().__init__(unique_id, model)
 
 		#Unique ID
@@ -11,6 +11,7 @@ class Robot(Agent):
 
 		#Denotes Robot or Bin
 		self.type = "Robot"
+		self.pathFindingType = pathFindingType
 
 		#The robot is initated with random coordinates (for now)
 		#When the place robot function adds the robot to the grids it gives
@@ -44,43 +45,95 @@ class Robot(Agent):
 		if self.model.openJobs == []:
 			return
 
-		if self.deadLock <= 0:
-			#print('deadlock detected')
-			self.moveRandom()
+		if self.pathFindingType == 'Blind Goal':
 
-		elif self.busy == True:
-			self.moveTowardsGoal()
+			if self.deadLock <= 0:
+				#print('deadlock detected')
+				self.moveRandom()
 
-		else:
-			toCollect = self.model.openJobs.pop(0)
-			self.goal = self.model.getItemLocation(toCollect)
-			#print('picking up a Job:',self.goal)
-			self.busy = True
-			self.moveTowardsGoal()
+			elif self.busy == True:
+				self.moveTowardsGoal()
 
-		# else:
-		# 	hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0]
-		# 	if hovering_over.type == 'Bin':
-		# 		overItem = hovering_over.peekItem()
+			else:
+				self.getJob()
+				#print('picking up a Job:',self.goal)
+				self.moveTowardsGoal()
 
-		# 		print(overItem)
+			self.checkValidCoords()
+			self.checkCellEmpty()
+			self.checkDeadLock()
+			self.moveRobot()
 
-		# 		if self.checkOpenOrders(overItem):
+		elif self.pathFindingType == 'A* Search':
+			print('--------------------')
+			if self.busy == False:
+				self.getJob()
+				self.pathFind()
+			else:
+				print('Follwing Route: self.route eventully')
+			print('--------------------')
 
-		# 			print(overItem,'needed at ',self.goal)
 
-		# 			self.busy = True
-		# 			self.moveTowardsGoal()
+	def pathFind(self):
+		self.openList = {}
+		self.closedList = {}
 
-		# 		else:
-		# 			self.moveRandom()
-		# 	else:
-		# 		self.moveRandom()
+		startingCell = self.getCell()
+		self.openList.update({startingCell:0})
 
-		self.checkValidCoords()
-		self.checkCellEmpty()
-		self.checkDeadLock()
-		self.moveRobot()
+		while len(self.openList) != 0:
+			nextCell = self.getLowestCell()
+			cellCost = self.openList.pop(nextCell)
+
+			print('At cell',nextCell.pos,'with a cost of',cellCost,'trying to go to',self.goal)
+
+			childCells = self.removeBots(self.model.grid.get_neighbors(pos=nextCell.pos, moore=False))
+
+			if self.checkGoalFound(childCells):
+				print('Goal Found')
+				break
+
+			else:
+				for cell in childCells:
+					g = 1
+					h = self.getManhattenDistance(cell)
+					print('manhatten distance to goal:',h)
+					f = g+h
+					print('Estimate cost to goal:',f)
+
+					self.openList.update({cell:f})
+
+	def getManhattenDistance(self,cell):
+		return abs(cell.pos[0] - self.goal[0]) + abs(cell.pos[1] - self.goal[1])
+
+
+	def checkGoalFound(self,neighbors):
+		for cell in neighbors:
+			if cell.pos == self.goal:
+				return True
+		return False
+
+	def getLowestCell(self):
+		return min(self.openList, key=self.openList.get)
+
+	def removeBots(self,neighbors):
+		returning = []
+		for agent in neighbors:
+			if agent.type in ['Bin','DropOff']:
+				returning.append(agent)
+		return returning
+
+
+	def getCell(self):
+		agentsInCell = self.model.grid.get_cell_list_contents((self.x,self.y))
+		for agent in agentsInCell:
+			if agent.type in ['Bin','DropOff']:
+				return agent
+
+	def getJob(self):
+		toCollect = self.model.openJobs.pop(0)
+		self.goal = self.model.getItemLocation(toCollect)
+		self.busy = True
 
 	def checkDeadLock(self):
 		#print(self.x, self.y, self.pos,(self.x, self.y) == self.pos)
@@ -264,6 +317,7 @@ class DropOffPoint(Agent):
 		self.x = x
 		self.y = y
 		self.type = 'DropOff'
+		self.unique_id = unique_id
 
 		self.order = order
 		self.contains = {}

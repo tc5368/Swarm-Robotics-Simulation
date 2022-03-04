@@ -88,8 +88,11 @@ def Apperance(agent):
 DevMode = True
 
 #Grid size cannot be changed while running.
-GridSize = 4
+GridSize = 8
 GridSizeHeight = 400; GridSizeWidth = 400;
+
+pathFindingType = "A* Search"
+# pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
@@ -97,7 +100,8 @@ model_params = {
 	"robotCount" : 1,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
-	"MaxStockPerOrder" :2
+	"MaxStockPerOrder" :2,
+	"pathFindingType":pathFindingType
 }
 
 
