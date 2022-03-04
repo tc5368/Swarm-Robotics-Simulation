@@ -13,23 +13,31 @@ def Apperance(agent):
 		else:
 			robotImage = 'resources/Robot Busy.png'
 
-		# if DevMode:
-		# 	robotImage = 'rect'
+		if DevMode:
+			robotImage = 'rect'
+			if agent.holding == []:
+				robotColor = "Blue"
+			else:
+				robotColor = "Red"
 
 		name = agent.unique_id
 
 		portrayal = {"Shape": robotImage,
 					 "Filled": "true",
+					 "Color": robotColor,
 					 "Layer": 'WarehouseFloor',
 					 "Number":agent.unique_id,
 					 "Carrying": agent.holding,
-					 "w": 0.5,
-					 "h": 0.5}
+					 "w": 0.6,
+					 "h": 0.6}
 
 	elif agent.type == "Bin":
 		name = agent.unique_id
 		formattedItem = str(agent.contains[0]).replace(' ','').replace('/','')
 		bin_image = "resources/"+formattedItem+".png"
+
+		if DevMode:
+			bin_image = 'rect'
 
 		portrayal = {"Shape": bin_image,
 					 "Filled": "true",
@@ -38,6 +46,8 @@ def Apperance(agent):
 					 "Contains": agent.contains,
 					 "Stock": agent.stock,
 					 "Color": 'grey',
+					 "w":0.1,
+					 "h":0.1,
 					 "scale": 0.5}
 
 	# elif agent.type == "Start":
@@ -84,7 +94,7 @@ GridSizeHeight = 400; GridSizeWidth = 400;
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 2,
+	"robotCount" : 1,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
 	"MaxStockPerOrder" :2
