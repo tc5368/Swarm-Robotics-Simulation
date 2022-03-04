@@ -19,7 +19,7 @@ Might cause issues with the random activation synchronisation.
 
 - Add in Dev mode options to turn squares a different colour in the path finding mode
 
-
+- Add way to avoid cells used by another robot
 
 
 
