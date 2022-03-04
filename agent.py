@@ -97,7 +97,7 @@ class Robot(Agent):
 				for cell in childCells:
 					g = 1
 					h = self.getManhattenDistance(cell)
-					print('manhatten distance to goal:',h)
+					print('From ',cell.pos,'manhatten distance to goal:',h)
 					f = g+h
 					print('Estimate cost to goal:',f)
 
