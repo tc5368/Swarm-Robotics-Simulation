@@ -19,7 +19,6 @@ class WarehouseModel(Model):
 		self.width = gridSize
 		self.height = gridSize
 
-
 		self.grid = MultiGrid(self.width, self.height, False)
 
 		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
@@ -27,15 +26,6 @@ class WarehouseModel(Model):
 
 		#Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
-
-
-		#Adding a starting cell to the grid, concept of robots being lowered on to the grid from above all 1 by 1.
-		#Cell 0 0 will always be the starting cell
-		#
-		#Removed Temporarily discuss with supervisor.
-		#
-		# startingCell = StartOffPoint('start',self)
-		# self.grid.place_agent(startingCell,(startingCell.x, startingCell.y))
 
 
 		#Adding dropoff bins that will each represent 1 order to be filled.
@@ -50,11 +40,6 @@ class WarehouseModel(Model):
 		#Iterates over every cell in the grid
 		for Cellx in range(self.width-1):
 			for Celly in range(self.height):
-
-				#Removed with start location being removed.
-				# if Cellx == 0 and Celly == 0:
-				# 	continue
-				
 
 				#The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx)+str(" ")+str(Celly))
@@ -82,7 +67,7 @@ class WarehouseModel(Model):
 
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
-			self.step()
+			# self.step()
 
 	def testComplete(self):
 		for i in range(self.height):

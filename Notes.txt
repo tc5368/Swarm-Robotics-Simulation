@@ -15,7 +15,7 @@ that way another bot can still use cell (9,9) in 1 turns time but they need to h
 Might cause issues with the random activation synchronisation.
 
 
-
+------------------
 
 
 

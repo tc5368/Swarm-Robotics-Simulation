@@ -71,15 +71,15 @@ def Apperance(agent):
 	return portrayal
 
 #Grid size cannot be changed while running.
-GridSize = 10
-GridSizeHeight = 1000; GridSizeWidth = 1000;
+GridSize = 4
+GridSizeHeight = 400; GridSizeWidth = 400;
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
 	"robotCount" : 2,
 	"gridSize" : GridSize,
-	"UniqueItems" : 5,
+	"UniqueItems" : 3,
 	"MaxStockPerOrder" :2
 }
 
