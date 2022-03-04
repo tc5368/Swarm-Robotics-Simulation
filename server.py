@@ -13,6 +13,9 @@ def Apperance(agent):
 		else:
 			robotImage = 'resources/Robot Busy.png'
 
+		# if DevMode:
+		# 	robotImage = 'rect'
+
 		name = agent.unique_id
 
 		portrayal = {"Shape": robotImage,
@@ -69,6 +72,10 @@ def Apperance(agent):
 					 "h": 1}
 
 	return portrayal
+
+
+# DevMode - just changes visulisations.
+DevMode = True
 
 #Grid size cannot be changed while running.
 GridSize = 4
