@@ -71,8 +71,6 @@ def Apperance(agent):
 		#this.drawRectangle in the mesa library only draws diagonaly gradients, can try and turn to use only horizontal
 		#need to just change line 159 so it uses y1 = 0 not y1=y0+cellHeight
 
-		print(dropOffColour)
-
 		portrayal = {"Shape": "rect",
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
@@ -91,7 +89,7 @@ DevMode = True
 # DevMode = False
 
 #Grid size cannot be changed while running.
-GridSize = 10
+GridSize = 5
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 # pathFindingType = "A* Search"
@@ -100,10 +98,10 @@ pathFindingType = "Blind Goal"
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 5,
+	"robotCount" : 1,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
-	"MaxStockPerOrder" :2,
+	"MaxStockPerOrder" : 2,
 	"pathFindingType":pathFindingType
 }
 
