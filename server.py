@@ -13,12 +13,11 @@ def Apperance(agent):
 		else:
 			robotImage = 'resources/Robot Busy.png'
 
+		robotColor = "Red"
 		if DevMode:
 			robotImage = 'rect'
 			if agent.holding == []:
 				robotColor = "Blue"
-			else:
-				robotColor = "Red"
 
 		name = agent.unique_id
 
@@ -33,7 +32,7 @@ def Apperance(agent):
 
 	elif agent.type == "Bin":
 		name = agent.unique_id
-		formattedItem = str(agent.contains[0]).replace(' ','').replace('/','')
+		formattedItem = str(agent.contains[0]).replace(' ','').replace('/','').replace('(','').replace(')','').replace('-','')
 		bin_image = "resources/"+formattedItem+".png"
 
 		if DevMode:
@@ -85,19 +84,20 @@ def Apperance(agent):
 
 
 # DevMode - just changes visulisations.
-DevMode = True
+# DevMode = True
+DevMode = False
 
 #Grid size cannot be changed while running.
-GridSize = 8
-GridSizeHeight = 400; GridSizeWidth = 400;
+GridSize = 5
+GridSizeHeight = 1000; GridSizeWidth = 1000;
 
-pathFindingType = "A* Search"
-# pathFindingType = "Blind Goal"
+# pathFindingType = "A* Search"
+pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 1,
+	"robotCount" : 5,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
 	"MaxStockPerOrder" :2,

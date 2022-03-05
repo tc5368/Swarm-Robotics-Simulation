@@ -1,5 +1,7 @@
 from mesa import Model
 from agent import *
+from binAgent import *
+from dropOffAgent import *
 from mesa.time import RandomActivation
 from mesa.space import *
 from orders import *
