@@ -1,5 +1,7 @@
 from model import *
 from agent import *
+from binAgent import *
+from dropOffAgent import *
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
@@ -69,6 +71,7 @@ def Apperance(agent):
 		#this.drawRectangle in the mesa library only draws diagonaly gradients, can try and turn to use only horizontal
 		#need to just change line 159 so it uses y1 = 0 not y1=y0+cellHeight
 
+		print(dropOffColour)
 
 		portrayal = {"Shape": "rect",
 					 "Filled": "true",
@@ -84,11 +87,11 @@ def Apperance(agent):
 
 
 # DevMode - just changes visulisations.
-# DevMode = True
-DevMode = False
+DevMode = True
+# DevMode = False
 
 #Grid size cannot be changed while running.
-GridSize = 5
+GridSize = 10
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 # pathFindingType = "A* Search"

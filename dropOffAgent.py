@@ -20,7 +20,6 @@ class DropOffPoint(Agent):
 			return False
 
 	def getPercentageDone(self):
-
 		colorOutput = []
 		numberTotal = sum(self.order.values())
 		numberHolding = sum(self.contains.values())

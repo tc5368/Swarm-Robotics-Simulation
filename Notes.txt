@@ -22,7 +22,7 @@ Might cause issues with the random activation synchronisation.
 - Add way to avoid cells used by another robot
 
 
-
+- Picking optimisation
 
 
 
