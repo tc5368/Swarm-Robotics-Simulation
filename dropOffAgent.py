@@ -13,6 +13,8 @@ class DropOffPoint(Agent):
 		self.contains = {}
 		self.complete = False
 
+		self.bookings = {}
+
 	def checkComplete(self):
 		if self.contains == self.order:
 			return True
@@ -60,3 +62,19 @@ class DropOffPoint(Agent):
 				itemsNeeded.append(item)
 		# print('needed',itemsNeeded)
 		return itemsNeeded
+
+	def bidOn(self,turn,robot):
+		self.bookings.update({turn:robot})
+
+	def advance(self):
+		None
+
+
+
+
+
+
+
+
+
+

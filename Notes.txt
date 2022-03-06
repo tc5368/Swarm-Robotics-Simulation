@@ -21,9 +21,9 @@ Might cause issues with the random activation synchronisation.
 
 - Add way to avoid cells used by another robot
 
+- Picking optimisation based on agent location.
 
-- Picking optimisation
-
+- The more off a type of item in the order the higher the priority robot should pick it
 
 
 Notes from Meeting with Balin:

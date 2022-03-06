@@ -40,13 +40,18 @@ def Apperance(agent):
 		if DevMode:
 			bin_image = 'rect'
 
+		binColour = "grey"
+		if agent.bookings != {}:
+			binColour = "green"
+
 		portrayal = {"Shape": bin_image,
 					 "Filled": "true",
 					 "Layer": 'WarehouseFloor',
 					 "Reference":agent.unique_id,
 					 "Contains": agent.contains,
 					 "Stock": agent.stock,
-					 "Color": 'grey',
+					 "Bookings": str(agent.bookings),
+					 "Color": binColour,
 					 "w":0.1,
 					 "h":0.1,
 					 "scale": 0.5}
@@ -92,13 +97,13 @@ DevMode = True
 GridSize = 5
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
-# pathFindingType = "A* Search"
-pathFindingType = "Blind Goal"
+pathFindingType = "A* Search"
+# pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 1,
+	"robotCount" : 2,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
 	"MaxStockPerOrder" : 2,

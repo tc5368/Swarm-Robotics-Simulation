@@ -70,26 +70,50 @@ class Robot(Agent):
 				self.getJob()
 				self.pathFind()
 			else:
-				print('Follwing Route: self.route eventully')
+				print('Follwing Route:',self.route)
+
+				if self.route == []:
+					print('goal found',self.goal)
+					# This section should be made into a function as it's universal to both
+					if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
+						self.dropOff()
+						self.goal = None
+						self.busy = False
+					else:
+						hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
+						self.checkOpenOrders(hovering_over)
+						self.pathFind()
+					# Until here
+				else:
+					self.x, self.y = self.route.pop(0)
+					self.moveRobot()
 			print('--------------------')
 
 
 	def pathFind(self):
 		self.openList = {}
-		self.closedList = {}
+		self.closedList = []
 
-		startingCell = self.getCell()
+		startingCell = self.getCell(self.pos)
 		self.openList.update({startingCell:0})
 
 		while len(self.openList) != 0:
+			print()
+			print(self.unique_id)
 			nextCell = self.getLowestCell()
 			cellCost = self.openList.pop(nextCell)
 
 			print('At cell',nextCell.pos,'with a cost of',cellCost,'trying to go to',self.goal)
+			self.closedList.append(nextCell.pos)
 
 			childCells = self.removeBots(self.model.grid.get_neighbors(pos=nextCell.pos, moore=False))
 
+			# Add here need to remove the childCells that have bookings on the turn it's needed.
+			
+			childCells = self.checkBookings(childCells,(self.model.getTurnCount()+len(self.closedList)))
+
 			if self.checkGoalFound(childCells):
+				self.closedList.append(self.goal)
 				print('Goal Found')
 				break
 
@@ -102,6 +126,31 @@ class Robot(Agent):
 					print('Estimate cost to goal:',f)
 
 					self.openList.update({cell:f})
+		self.bookRoute(self.closedList)
+		self.route = self.closedList
+
+
+	def checkBookings(self,childCells,turn):
+		print('checking if and of these cells:',childCells,'are busy on turn',turn)
+		validCells = []
+		for cell in childCells:
+			if cell.bookings.get(turn) == None:
+				print(cell,cell.unique_id,'avaliable to be booked')
+				validCells.append(cell)
+			else:
+				print(cell,cell.unique_id,'Is busy with: ',cell.bookings.get(turn),'that turn')
+
+		return validCells
+
+	def bookRoute(self,cellList):
+		print('booking route:',cellList)
+		for cellIndex in range(len(cellList)):
+			cell = self.getCell(cellList[cellIndex])
+			turnNumber = self.model.getTurnCount() + cellIndex
+
+			print('booking cell ',cell.pos,'for turn number',turnNumber)
+			cell.bidOn(turnNumber,self.unique_id)
+
 
 	def getManhattenDistance(self,cell):
 		return abs(cell.pos[0] - self.goal[0]) + abs(cell.pos[1] - self.goal[1])
@@ -117,15 +166,19 @@ class Robot(Agent):
 		return min(self.openList, key=self.openList.get)
 
 	def removeBots(self,neighbors):
+		botLocations = []
 		returning = []
 		for agent in neighbors:
-			if agent.type in ['Bin','DropOff']:
+			if agent.type == "Robot":
+				botLocations.append(agent.pos)
+		for agent in neighbors:
+			if agent.type in ['Bin','DropOff'] and agent.pos not in botLocations:
 				returning.append(agent)
 		return returning
 
 
-	def getCell(self):
-		agentsInCell = self.model.grid.get_cell_list_contents((self.x,self.y))
+	def getCell(self,posistion):
+		agentsInCell = self.model.grid.get_cell_list_contents(posistion)
 		for agent in agentsInCell:
 			if agent.type in ['Bin','DropOff']:
 				return agent
@@ -249,7 +302,8 @@ class Robot(Agent):
 
 
 
-
+	def advance(self):
+		None
 
 
 

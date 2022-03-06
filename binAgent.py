@@ -17,7 +17,7 @@ class Bin(Agent):
 		self.contains = contains
 		self.stock = stock
 
-		self.bookings = []
+		self.bookings = {}
 
 	def giveItem(self):
 		#This function hands the an item from the contents of the bin to the robot in the same cell.
@@ -55,3 +55,35 @@ class Bin(Agent):
 
 	def peekItem(self):
 		return self.contains[0]
+
+	def bidOn(self,turn,robot):
+		self.bookings.update({turn:robot})
+
+	def advance(self):
+		None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

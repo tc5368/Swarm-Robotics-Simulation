@@ -2,7 +2,7 @@ from mesa import Model
 from agent import *
 from binAgent import *
 from dropOffAgent import *
-from mesa.time import RandomActivation
+from mesa.time import *
 from mesa.space import *
 from orders import *
 
@@ -24,10 +24,12 @@ class WarehouseModel(Model):
 		self.grid = MultiGrid(self.width, self.height, False)
 
 		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
-		self.schedule = RandomActivation(self)
+		self.schedule = SimultaneousActivation(self)
 
 		#Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
+
+		self.turnCount = 0
 
 
 		#Adding dropoff bins that will each represent 1 order to be filled.
@@ -102,9 +104,13 @@ class WarehouseModel(Model):
 		for i in needed:
 			self.openJobs.append(i)
 
+	def getTurnCount(self):
+		return self.turnCount
+
 
 	#Activates the scheduler to move all robots forward 1 step.
 	def step(self):
+		self.turnCount += 1
 		self.schedule.step()
 
 		if self.testComplete():
