@@ -90,6 +90,11 @@ class Robot(Agent):
 			print('--------------------')
 
 
+
+
+			# fix bookings
+
+
 	def pathFind(self):
 		self.openList = {}
 		self.closedList = []
