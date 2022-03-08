@@ -20,8 +20,11 @@ def Apperance(agent):
 			robotImage = 'rect'
 		if agent.holding == []:
 			robotColor = "Blue"
-		if agent.unique_id == 0:
+
+			# DELETE
+		if agent.unique_id in [0,1]:
 			robotColor = "Orange"
+			# DELETE
 
 		name = agent.unique_id
 
@@ -42,7 +45,7 @@ def Apperance(agent):
 		if DevMode:
 			bin_image = 'rect'
 
-		binColour = "grey"
+		binColour = "white"
 		if agent.bookings != {}:
 			binColour = "green"
 
@@ -54,8 +57,8 @@ def Apperance(agent):
 					 "Stock": agent.stock,
 					 "Bookings": str(agent.bookings),
 					 "Color": binColour,
-					 "w":0.1,
-					 "h":0.1,
+					 "w":0.5,
+					 "h":0.5,
 					 "scale": 0.5}
 
 	# elif agent.type == "Start":
@@ -96,7 +99,7 @@ DevMode = True
 # DevMode = False
 
 #Grid size cannot be changed while running.
-GridSize = 20
+GridSize = 15
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
 pathFindingType = "Path Finding"
@@ -105,10 +108,10 @@ pathFindingType = "Path Finding"
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 150,
+	"robotCount" : 75,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
-	"MaxStockPerOrder" : 2,
+	"MaxStockPerOrder" : 3,
 	"pathFindingType":pathFindingType
 }
 

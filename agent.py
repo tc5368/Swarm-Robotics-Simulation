@@ -42,7 +42,7 @@ class Robot(Agent):
 
 		# DELETE
 		# Path finding testing
-		if self.unique_id != 0:
+		if self.unique_id not in [0,1]:
 			return
 		# DELETE
 
@@ -78,13 +78,12 @@ class Robot(Agent):
 			print('--------------------')
 			if self.busy == False:
 				self.getJob()
-				self.getRouteFromParents(self.pathFind())
+				self.planAndBid()
 			else:
 
 				if self.route == False:
 					self.route = []
-					parents = self.pathFind()
-					self.getRouteFromParents(parents)
+					self.planAndBid()
 				else:
 					print('Follwing Route:',self.route)
 
@@ -98,17 +97,26 @@ class Robot(Agent):
 						else:
 							hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
 							self.checkOpenOrders(hovering_over)
-							self.getRouteFromParents(self.pathFind())
+							self.planAndBid()
 						# Until here
 					else:
 						self.x, self.y = self.route.pop(0)
 						self.moveRobot()
 			print('--------------------')
 
+	def planAndBid(self):
+		parents = self.pathFind()
+		self.getRouteFromParents(parents)
+		self.bookRoute()
 
 
-
-			# fix bookings
+	def bookRoute(self):
+		if self.route == False:
+			return
+		else:
+			for turnIndex in range(len(self.route)):
+				print('Make bid for cell %s on turn %s' %(self.route[turnIndex],turnIndex+self.model.turnCount))
+				self.getBin(self.route[turnIndex]).bidOn(turnIndex+self.model.turnCount,self)
 			
 	def pathFind(self):
 
@@ -130,6 +138,7 @@ class Robot(Agent):
 				return parents
 
 			childNodes = self.removeBots(self.model.grid.get_neighbors(pos=node, moore=False))
+
 
 			print('Looking at node',node)
 
@@ -206,12 +215,21 @@ class Robot(Agent):
 		return returning
 
 	def getManhattenDistance(self,cell):
-		return abs(cell[0] - self.goal[0]) + abs(cell[1] - self.goal[1])
+		try:
+			return abs(cell[0] - self.goal[0]) + abs(cell[1] - self.goal[1])
+		except:
+			print('ERROR with ',cell,self.goal)
+			exit()
 
 
 	def getLowestCell(self,openList):
 		return min(openList, key=openList.get)
 
+	def getBin(self,posistion):
+		contents = self.model.grid.get_cell_list_contents(posistion)
+		for agent in contents:
+			if agent.type in ["Bin","DropOff"]:
+				return agent
 
 	def getJob(self):
 		toCollect = self.model.openJobs.pop(0)

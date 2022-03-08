@@ -69,9 +69,37 @@ class WarehouseModel(Model):
 			#Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
 
+
+			# THIS IS FOR TESTING NOT STAYING IN
+			# 
+			# 
+			# 
+			# 
+			# ----------------------------------------
+			# 
+			# 
+			# 
+			# 
+			cell = self.grid.get_cell_list_contents((newRobot.x, newRobot.y))[0]
+			toRemove = cell.peekItem()
+			for Celly in range(self.height):
+				gridCell = self.grid.get_cell_list_contents((self.width-1,Celly))[0]
+				if toRemove in gridCell.order:
+					gridCell.order.pop(toRemove)
+			# 
+			# 
+			# 
+			# 
+			# ----------------------------------------
+			# 
+			# 
+			# 
+			# 
+			# UNTIL HERE
+
 			#Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
-			# self.step()
+			# 
 
 	def testComplete(self):
 		for i in range(self.height):
