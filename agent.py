@@ -29,6 +29,8 @@ class Robot(Agent):
 		#Queue containing the tasks assigned to the robot in some implementations.
 		self.tasks = []
 
+		self.route = []
+
 		self.warehouseMaxY = gridInfo[0]-1
 		self.warehouseMaxX = gridInfo[1]-1
 
@@ -37,6 +39,12 @@ class Robot(Agent):
 
 
 	def step(self):
+
+		# DELETE
+		# Path finding testing
+		if self.unique_id != 0:
+			return
+		# DELETE
 
 		#print('------------------------')
 
@@ -64,111 +72,128 @@ class Robot(Agent):
 			self.checkDeadLock()
 			self.moveRobot()
 
-		elif self.pathFindingType == 'A* Search':
+		# a* is not correct
+
+		elif self.pathFindingType == 'Path Finding':
 			print('--------------------')
 			if self.busy == False:
 				self.getJob()
-				self.pathFind()
+				parents = self.pathFind()
+				self.getRouteFromParents(parents)
 			else:
-				print('Follwing Route:',self.route)
 
-				if self.route == []:
-					print('goal found',self.goal)
-					# This section should be made into a function as it's universal to both
-					if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
-						self.dropOff()
-						self.goal = None
-						self.busy = False
-					else:
-						hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
-						self.checkOpenOrders(hovering_over)
-						self.pathFind()
-					# Until here
+				if self.route == False:
+					self.route = []
+					parents = self.pathFind()
+					self.getRouteFromParents(parents)
 				else:
-					self.x, self.y = self.route.pop(0)
-					self.moveRobot()
+					print('Follwing Route:',self.route)
+
+				# if self.route == []:
+				# 	print('goal found',self.goal)
+				# 	# This section should be made into a function as it's universal to both
+				# 	if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
+				# 		self.dropOff()
+				# 		self.goal = None
+				# 		self.busy = False
+				# 	else:
+				# 		hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
+				# 		self.checkOpenOrders(hovering_over)
+				# 		self.pathFind()
+				# 	# Until here
+				# else:
+				# 	self.x, self.y = self.route.pop(0)
+				# 	self.moveRobot()
 			print('--------------------')
 
 
 
 
 			# fix bookings
-
-
-	def pathFind(self):
-		self.openList = {}
-		self.closedList = []
-
-		startingCell = self.getCell(self.pos)
-		self.openList.update({startingCell:0})
-
-		while len(self.openList) != 0:
-			print()
-			print(self.unique_id)
-			nextCell = self.getLowestCell()
-			cellCost = self.openList.pop(nextCell)
-
-			print('At cell',nextCell.pos,'with a cost of',cellCost,'trying to go to',self.goal)
-			self.closedList.append(nextCell.pos)
-
-			childCells = self.removeBots(self.model.grid.get_neighbors(pos=nextCell.pos, moore=False))
-
-			# Add here need to remove the childCells that have bookings on the turn it's needed.
 			
-			childCells = self.checkBookings(childCells,(self.model.getTurnCount()+len(self.closedList)))
+	def pathFind(self):
 
-			if self.checkGoalFound(childCells):
-				self.closedList.append(self.goal)
-				print('Goal Found')
+		print('pathfinding from %s to %s' %(self.pos,self.goal))
+
+		openList = {}
+		closedList = {}
+		parents = {}
+
+		openList.update({self.pos:0})
+
+		while len(openList) > 0:
+
+			node = self.getLowestCell(openList)
+			cost = openList.pop(node)
+
+			if node == self.goal:
+				print('Goal node found')
+				return parents
+
+			childNodes = self.removeBots(self.model.grid.get_neighbors(pos=node, moore=False))
+
+			print('Looking at node',node)
+
+			for childNode in childNodes:
+
+				print('Looking at child node',childNode)
+
+				if childNode == self.goal:
+					print("Goal node found in the loop")
+					parents.update({self.goal:node})
+					return parents
+
+				g = cost + 1
+				h = self.getManhattenDistance(childNode)
+				f_cost = g + h
+
+				print('child cost',f_cost)
+
+				if childNode in openList:
+					if cost < f_cost:
+						continue
+
+				elif childNode in closedList:
+					if cost < f_cost:
+						continue
+
+				else:
+					openList.update({childNode:f_cost})
+
+				
+				parents.update({childNode:node})
+
+			closedList.update({node:cost})
+			print()
+		return parents
+
+
+	def getRouteFromParents(self,parents):
+		
+		if parents == {}:
+			self.route = []
+			return
+
+		if self.goal not in parents:
+			self.route = False
+			print('Cell is not found, busy')
+			return
+
+		beforeNode = parents[self.goal]
+		self.route.insert(0,self.goal)
+		while True:
+			self.route.insert(0,beforeNode)
+			if beforeNode == self.pos:
 				break
-
 			else:
-				for cell in childCells:
-					g = 1
-					h = self.getManhattenDistance(cell)
-					print('From ',cell.pos,'manhatten distance to goal:',h)
-					f = g+h
-					print('Estimate cost to goal:',f)
+				beforeNode = parents[beforeNode]
 
-					self.openList.update({cell:f})
-		self.bookRoute(self.closedList)
-		self.route = self.closedList
-
-
-	def checkBookings(self,childCells,turn):
-		print('checking if and of these cells:',childCells,'are busy on turn',turn)
-		validCells = []
-		for cell in childCells:
-			if cell.bookings.get(turn) == None:
-				print(cell,cell.unique_id,'avaliable to be booked')
-				validCells.append(cell)
-			else:
-				print(cell,cell.unique_id,'Is busy with: ',cell.bookings.get(turn),'that turn')
-
-		return validCells
-
-	def bookRoute(self,cellList):
-		print('booking route:',cellList)
-		for cellIndex in range(len(cellList)):
-			cell = self.getCell(cellList[cellIndex])
-			turnNumber = self.model.getTurnCount() + cellIndex
-
-			print('booking cell ',cell.pos,'for turn number',turnNumber)
-			cell.bidOn(turnNumber,self.unique_id)
-
-
-	def getManhattenDistance(self,cell):
-		return abs(cell.pos[0] - self.goal[0]) + abs(cell.pos[1] - self.goal[1])
-
-
-	def checkGoalFound(self,neighbors):
-		for cell in neighbors:
-			if cell.pos == self.goal:
-				return True
-		return False
-
-	def getLowestCell(self):
-		return min(self.openList, key=self.openList.get)
+	def cleanGetNeighbors(self,rawNodes):
+		childNodes = []
+		for i in rawNodes:
+			if i.type in ['Bin','DropOff']:
+				childNodes.append(i.pos)
+		return childNodes
 
 	def removeBots(self,neighbors):
 		botLocations = []
@@ -178,15 +203,16 @@ class Robot(Agent):
 				botLocations.append(agent.pos)
 		for agent in neighbors:
 			if agent.type in ['Bin','DropOff'] and agent.pos not in botLocations:
-				returning.append(agent)
+				returning.append(agent.pos)
 		return returning
 
+	def getManhattenDistance(self,cell):
+		return abs(cell[0] - self.goal[0]) + abs(cell[1] - self.goal[1])
 
-	def getCell(self,posistion):
-		agentsInCell = self.model.grid.get_cell_list_contents(posistion)
-		for agent in agentsInCell:
-			if agent.type in ['Bin','DropOff']:
-				return agent
+
+	def getLowestCell(self,openList):
+		return min(openList, key=openList.get)
+
 
 	def getJob(self):
 		toCollect = self.model.openJobs.pop(0)

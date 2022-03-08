@@ -18,8 +18,10 @@ def Apperance(agent):
 		robotColor = "Red"
 		if DevMode:
 			robotImage = 'rect'
-			if agent.holding == []:
-				robotColor = "Blue"
+		if agent.holding == []:
+			robotColor = "Blue"
+		if agent.unique_id == 0:
+			robotColor = "Orange"
 
 		name = agent.unique_id
 
@@ -94,16 +96,16 @@ DevMode = True
 # DevMode = False
 
 #Grid size cannot be changed while running.
-GridSize = 5
+GridSize = 20
 GridSizeHeight = 1000; GridSizeWidth = 1000;
 
-pathFindingType = "A* Search"
+pathFindingType = "Path Finding"
 # pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount" : 2,
+	"robotCount" : 150,
 	"gridSize" : GridSize,
 	"UniqueItems" : 3,
 	"MaxStockPerOrder" : 2,
