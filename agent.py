@@ -78,8 +78,7 @@ class Robot(Agent):
 			print('--------------------')
 			if self.busy == False:
 				self.getJob()
-				parents = self.pathFind()
-				self.getRouteFromParents(parents)
+				self.getRouteFromParents(self.pathFind())
 			else:
 
 				if self.route == False:
@@ -89,21 +88,21 @@ class Robot(Agent):
 				else:
 					print('Follwing Route:',self.route)
 
-				# if self.route == []:
-				# 	print('goal found',self.goal)
-				# 	# This section should be made into a function as it's universal to both
-				# 	if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
-				# 		self.dropOff()
-				# 		self.goal = None
-				# 		self.busy = False
-				# 	else:
-				# 		hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
-				# 		self.checkOpenOrders(hovering_over)
-				# 		self.pathFind()
-				# 	# Until here
-				# else:
-				# 	self.x, self.y = self.route.pop(0)
-				# 	self.moveRobot()
+					if self.route == []:
+						print('goal found',self.goal)
+						# This section should be made into a function as it's universal to both
+						if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
+							self.dropOff()
+							self.goal = None
+							self.busy = False
+						else:
+							hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
+							self.checkOpenOrders(hovering_over)
+							self.getRouteFromParents(self.pathFind())
+						# Until here
+					else:
+						self.x, self.y = self.route.pop(0)
+						self.moveRobot()
 			print('--------------------')
 
 
