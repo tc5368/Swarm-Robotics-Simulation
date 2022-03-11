@@ -6,125 +6,121 @@ from mesa.time import *
 from mesa.space import *
 from orders import *
 
-class WarehouseModel(Model):
-	#This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder,pathFindingType):
-		#Allows the model to continue to run.
+class WarehouseModel(Model):
+	# This is the warehouse model works as the base controller to creat all of the robots
+
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType):
+		# Allows the model to continue to run.
 		self.running = True
-		#Number of robots in the warehouse
+		# Number of robots in the warehouse
 		self.num_agents = robotCount
 		self.openJobs = []
-		#The matrix that that is the warehouse floor.
-		#This needs to be changed to single grid to not allow multiple robots to enter the same space.
-		
+		# The matrix that that is the warehouse floor.
+		# This needs to be changed to single grid to not allow multiple robots to enter the same space.
 		self.width = gridSize
 		self.height = gridSize
 
 		self.grid = MultiGrid(self.width, self.height, False)
 
-		#To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
+		# To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
 		self.schedule = SimultaneousActivation(self)
 
-		#Agents that need to be killed off after they crash into the wall, will be removed.
+		# Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
 
 		self.turnCount = 0
 
-
-		#Adding dropoff bins that will each represent 1 order to be filled.
-		#Idea to have the far right coloumn on the grid be all dropoff points.
+		# Adding dropoff bins that will each represent 1 order to be filled.
+		# Idea to have the far right coloumn on the grid be all dropoff points.
 		for i in range(self.height):
-			DropOffCell = DropOffPoint('Drop off point '+str(i),self, x=self.width-1, y=i, order=generate_order(UniqueItems,MaxStockPerOrder,((self.width*self.height)-self.height)))
-			self.grid.place_agent(DropOffCell,(DropOffCell.x, DropOffCell.y))
+			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=generate_order(UniqueItems, MaxStockPerOrder, ((self.width * self.height) - self.height)))
+			self.grid.place_agent(DropOffCell, (DropOffCell.x, DropOffCell.y))
 
-
-		#Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
-		GridContents = allocate_items_to_grid(((self.width*self.height)-self.height))
-		#Iterates over every cell in the grid
-		for Cellx in range(self.width-1):
+		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
+		GridContents = allocate_items_to_grid(((self.width * self.height) - self.height))
+		# Iterates over every cell in the grid
+		for Cellx in range(self.width - 1):
 			for Celly in range(self.height):
 
-				#The name of the cell it just the coordinates in the grid
-				cellReference = (str(Cellx)+str(" ")+str(Celly))
-				#Creates a new agent to sit in the cell as a marker
-				newCell = Bin(cellReference, self, x = Cellx, y = Celly, contains = [GridContents.pop()], stock = 100)
-				#Places the cell agent into their place in the grid
-				self.grid.place_agent(newCell, (newCell.x,newCell.y))
+				# The name of the cell it just the coordinates in the grid
+				cellReference = (str(Cellx) + str(" ") + str(Celly))
+				# Creates a new agent to sit in the cell as a marker
+				newCell = Bin(cellReference, self, x=Cellx, y=Celly, contains=[GridContents.pop()], stock=100)
+				# Places the cell agent into their place in the grid
+				self.grid.place_agent(newCell, (newCell.x, newCell.y))
 
 		# Creating the Robots
 		for i in range(self.num_agents):
-			#Creates the robots starting at random points on the warehouse floor.
-			#x, y = startingCell.pos
-			
-			#Loop to create the new robots and to add them into a grid cell that is empty
+			# Creates the robots starting at random points on the warehouse floor.
+			# x, y = startingCell.pos
+			# Loop to create the new robots and to add them into a grid cell that is empty
 			while True:
-				x = random.randint(0,self.width-2)
-				y = random.randint(0,self.height-1)
-				#When the random values find an empty grid cell break the loop and place the robot
-				if len(self.grid.get_cell_list_contents((x,y))) == 1:
+				x = random.randint(0, self.width - 2)
+				y = random.randint(0, self.height - 1)
+				# When the random values find an empty grid cell break the loop and place the robot
+				if len(self.grid.get_cell_list_contents((x, y))) == 1:
 					break
 
-			newRobot = Robot(i, self, y = y, x = x,gridInfo=[self.height,self.width],pathFindingType = pathFindingType)
-			#Adds the new robot to the scheduler
+			newRobot = Robot(i, self, y=y, x=x, gridInfo=[self.height, self.width], pathFindingType=pathFindingType)
+			# Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
 
-
 			# THIS IS FOR TESTING NOT STAYING IN
-			# 
-			# 
-			# 
-			# 
-			# ----------------------------------------
-			# 
-			# 
-			# 
-			# 
+			#
+			#
+			#
+			#
+			#  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+			#
+			#
+			#
+			#
 			cell = self.grid.get_cell_list_contents((newRobot.x, newRobot.y))[0]
 			toRemove = cell.peekItem()
 			for Celly in range(self.height):
-				gridCell = self.grid.get_cell_list_contents((self.width-1,Celly))[0]
+				gridCell = self.grid.get_cell_list_contents((self.width - 1, Celly))[0]
 				if toRemove in gridCell.order:
 					gridCell.order.pop(toRemove)
-			# 
-			# 
-			# 
-			# 
-			# ----------------------------------------
-			# 
-			# 
-			# 
-			# 
+			#
+			#
+			#
+			#
+			#  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+			#
+			#
+			#
+			#
 			# UNTIL HERE
 
-			#Adds the robot to the grid according to its starting coordinates
+			# Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
-			# 
+			#
 
 	def testComplete(self):
 		for i in range(self.height):
 			# print('Cell %s not complete' %i)
-			# print(self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete())
-			if self.grid.get_cell_list_contents((self.width-1,i))[0].checkComplete() == False:
+			# print(self.grid.get_cell_list_contents((self.width - 1, i))[0].checkComplete())
+			if not self.grid.get_cell_list_contents((self.width - 1, i))[0].checkComplete():
 				return False
 		return True
 
-	def getItemLocation(self,item):
-		for Cellx in range(self.width-1):
+	def getItemLocation(self, item):
+		for Cellx in range(self.width - 1):
 			for Celly in range(self.height):
-				checking = self.grid.get_cell_list_contents((Cellx,Celly))[0]
+				checking = self.grid.get_cell_list_contents((Cellx, Celly))[0]
 				if checking.type == 'Bin':
 					if item == checking.peekItem():
-						return (Cellx,Celly)
-		else: 
+						return (Cellx, Celly)
+		else:
 			return None
 
 	def getOpenJobs(self):
 		needed = []
 		self.openJobs = []
 		for Celly in range(self.height):
-			gridCell = self.grid.get_cell_list_contents((self.width-1,Celly))[0]
-			if gridCell.type == 'DropOff': 
+			gridCell = self.grid.get_cell_list_contents((self.width - 1, Celly))[0]
+			if gridCell.type == 'DropOff':
 				itemsNeeded = gridCell.lookingFor()
 				for item in itemsNeeded:
 					needed.append(item)
@@ -135,8 +131,7 @@ class WarehouseModel(Model):
 	def getTurnCount(self):
 		return self.turnCount
 
-
-	#Activates the scheduler to move all robots forward 1 step.
+	# Activates the scheduler to move all robots forward 1 step.
 	def step(self):
 		self.turnCount += 1
 		self.schedule.step()
@@ -145,15 +140,13 @@ class WarehouseModel(Model):
 			self.running = False
 
 		self.getOpenJobs()
-		#print(self.openJobs)
+		# print(self.openJobs)
 
-		#Any agents marked for execution are summimarily killed here.
-		#For use in development no robots should be killed when working
+		# Any agents marked for execution are summimarily killed here.
+		# For use in development no robots should be killed when working
 		for agent in self.kill_agents:
-			#print('removing agent at ',agent.pos)
+			# print('removing agent at ', agent.pos)
 			self.grid.remove_agent(agent)
 			self.schedule.remove(agent)
-		#Once all agents are killed clear the to execute list
+		# Once all agents are killed clear the to execute list
 		self.kill_agents = []
-
-

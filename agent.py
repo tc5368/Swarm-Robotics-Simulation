@@ -1,21 +1,22 @@
 from mesa import Agent
 
-class Robot(Agent):
-	#This is the robot agent that moves around the grid fufilling customer orders.
 
-	def __init__(self, unique_id, model, y, x, gridInfo,pathFindingType):
+class Robot(Agent):
+	# This is the robot agent that moves around the grid fufilling customer orders.
+
+	def __init__(self, unique_id, model, y, x, gridInfo, pathFindingType):
 		super().__init__(unique_id, model)
 
-		#Unique ID
+		# Unique ID
 		self.unique_id = unique_id
 
-		#Denotes Robot or Bin
+		# Denotes Robot or Bin
 		self.type = "Robot"
 		self.pathFindingType = pathFindingType
 
-		#The robot is initated with random coordinates (for now)
-		#When the place robot function adds the robot to the grids it gives
-		#the robot a self.pos which is a tuple containing (x,y)
+		# The robot is initated with random coordinates (for now)
+		# When the place robot function adds the robot to the grids it gives
+		# the robot a self.pos which is a tuple containing (x, y)
 		self.x = x
 		self.y = y
 
@@ -23,32 +24,30 @@ class Robot(Agent):
 		self.busy = False
 		self.deadLock = 5
 
-		#Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
-		#Currently randomly chosen will be changed!
+		# Current task the robot is doing, used to aid understanding can see when the robot is carrying an item or going to pick something up.
+		# Currently randomly chosen will be changed!
 		self.holding = []
-		#Queue containing the tasks assigned to the robot in some implementations.
+		# Queue containing the tasks assigned to the robot in some implementations.
 		self.tasks = []
 
 		self.route = []
 
-		self.warehouseMaxY = gridInfo[0]-1
-		self.warehouseMaxX = gridInfo[1]-1
+		self.warehouseMaxY = gridInfo[0] - 1
+		self.warehouseMaxX = gridInfo[1] - 1
 
-		#If the agent is 'dead' and should be removed - not needed in final implementation
+		# If the agent is 'dead' and should be removed - not needed in final implementation
 		self.dead = False
-
 
 	def step(self):
 
 		# DELETE
 		# Path finding testing
-		# 
-		if self.unique_id not in [0,1]:
+		if self.unique_id not in [0, 1]:
 			return
 		#
 		# DELETE
 
-		#print('------------------------')
+		# print('------------------------')
 
 		self.x, self.y = self.pos
 
@@ -58,15 +57,15 @@ class Robot(Agent):
 		if self.pathFindingType == 'Blind Goal':
 
 			if self.deadLock <= 0:
-				#print('deadlock detected')
+				# print('deadlock detected')
 				self.moveRandom()
 
-			elif self.busy == True:
+			elif self.busy:
 				self.moveTowardsGoal()
 
 			else:
 				self.getJob()
-				#print('picking up a Job:',self.goal)
+				# print('picking up a Job:', self.goal)
 				self.moveTowardsGoal()
 
 			self.checkValidCoords()
@@ -77,19 +76,19 @@ class Robot(Agent):
 		# a* is not correct
 
 		elif self.pathFindingType == 'Path Finding':
-			if self.busy == False:
+			if not self.busy:
 				self.getJob()
 				self.planAndBid()
 			else:
 
-				if self.route == False:
+				if not self.route:
 					self.route = []
 					self.planAndBid()
 				else:
-					print('Follwing Route:',self.route)
+					print('Follwing Route:', self.route)
 
 					if self.route == []:
-						# print('goal found',self.goal)
+						# print('goal found', self.goal)
 						# This section should be made into a function as it's universal to both
 						if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
 							self.dropOff()
@@ -110,24 +109,23 @@ class Robot(Agent):
 		print(self.route)
 		self.bookRoute()
 
-
 	def bookRoute(self):
-		if self.route == False:
+		if not self.route:
 			return
 		else:
 			for turnIndex in range(len(self.route)):
-				# print('Make bid for cell %s on turn %s' %(self.route[turnIndex],turnIndex+self.model.turnCount))
-				self.getBin(self.route[turnIndex]).bidOn(turnIndex+self.model.turnCount,self)
-			
+				# print('Make bid for cell %s on turn %s' %(self.route[turnIndex], turnIndex+self.model.turnCount))
+				self.getBin(self.route[turnIndex]).bidOn(turnIndex + self.model.turnCount, self)
+
 	def pathFind(self):
 
-		# print('pathfinding from %s to %s' %(self.pos,self.goal))
+		# print('pathfinding from %s to %s' %(self.pos, self.goal))
 
 		openList = {}
 		closedList = {}
 		parents = {}
 
-		openList.update({self.pos:0})
+		openList.update({self.pos: 0})
 
 		while len(openList) > 0:
 
@@ -141,22 +139,22 @@ class Robot(Agent):
 			childNodes = self.removeBots(self.model.grid.get_neighbors(pos=node, moore=False))
 			# childNodes = self.filterAvaliable(childNodes)
 
-			# print('Looking at node',node)
+			# print('Looking at node', node)
 
 			for childNode in childNodes:
 
-				# print('Looking at child node',childNode)
+				# print('Looking at child node', childNode)
 
 				if childNode == self.goal:
 					# print("Goal node found in the loop")
-					parents.update({self.goal:node})
+					parents.update({self.goal: node})
 					return parents
 
 				g = cost + 1
 				h = self.getManhattenDistance(childNode)
 				f_cost = g + h
 
-				# print('child cost',f_cost)
+				# print('child cost', f_cost)
 
 				if childNode in openList:
 					if cost < f_cost:
@@ -167,16 +165,14 @@ class Robot(Agent):
 						continue
 
 				else:
-					openList.update({childNode:f_cost})
+					openList.update({childNode: f_cost})
 
-				
-				parents.update({childNode:node})
+				parents.update({childNode: node})
 
-			closedList.update({node:cost})
+			closedList.update({node: cost})
 		return parents
 
-
-	def getRouteFromParents(self,parents):
+	def getRouteFromParents(self, parents):
 		if parents == {}:
 			self.route = []
 			return
@@ -187,47 +183,46 @@ class Robot(Agent):
 			return
 
 		beforeNode = parents[self.goal]
-		self.route.insert(0,self.goal)
+		self.route.insert(0, self.goal)
 		while True:
-			self.route.insert(0,beforeNode)
+			self.route.insert(0, beforeNode)
 			if beforeNode == self.pos:
 				break
 			else:
 				beforeNode = parents[beforeNode]
 
-	def cleanGetNeighbors(self,rawNodes):
+	def cleanGetNeighbors(self, rawNodes):
 		childNodes = []
 		for i in rawNodes:
-			if i.type in ['Bin','DropOff']:
+			if i.type in ['Bin', 'DropOff']:
 				childNodes.append(i.pos)
 		return childNodes
 
-	def removeBots(self,neighbors):
+	def removeBots(self, neighbors):
 		botLocations = []
 		returning = []
 		for agent in neighbors:
 			if agent.type == "Robot":
 				botLocations.append(agent.pos)
 		for agent in neighbors:
-			if agent.type in ['Bin','DropOff'] and agent.pos not in botLocations:
+			if agent.type in ['Bin', 'DropOff'] and agent.pos not in botLocations:
 				returning.append(agent.pos)
 		return returning
 
-	def getManhattenDistance(self,cell):
+	def getManhattenDistance(self, cell):
 		try:
 			return abs(cell[0] - self.goal[0]) + abs(cell[1] - self.goal[1])
 		except:
-			print('ERROR with ',cell,self.goal)
+			print('ERROR with ', cell, self.goal)
 			exit()
 
-
-	def getLowestCell(self,openList):
+	def getLowestCell(self, openList):
 		return min(openList, key=openList.get)
 
-	def getBin(self,posistion):
+	def getBin(self, posistion):
 		contents = self.model.grid.get_cell_list_contents(posistion)
 		for agent in contents:
-			if agent.type in ["Bin","DropOff"]:
+			if agent.type in ["Bin", "DropOff"]:
 				return agent
 
 	def getJob(self):
@@ -236,22 +231,22 @@ class Robot(Agent):
 		self.busy = True
 
 	def checkDeadLock(self):
-		#print(self.x, self.y, self.pos,(self.x, self.y) == self.pos)
+		# print(self.x, self.y, self.pos,(self.x, self.y) == self.pos)
 		if (self.x, self.y) == self.pos:
 			self.deadLock -= 1
 		else:
 			self.deadLock = 5
-		#print(self.deadLock)
+		# print(self.deadLock)
 
 	def moveRobot(self):
-		#print('moving to ',self.x,self.y,'from ',self.pos)
+		# print('moving to ', self.x, self.y, 'from ', self.pos)
 		self.model.grid.move_agent(self, (self.x, self.y))
 
 	def checkValidCoords(self):
 		if self.x > self.warehouseMaxX:
 			self.x = self.warehouseMaxX
 		if self.y > self.warehouseMaxY:
-			self.y = self.warehouseMaxY 
+			self.y = self.warehouseMaxY
 		if self.x < 0:
 			self.x = 0
 		if self.y < 0:
@@ -259,40 +254,39 @@ class Robot(Agent):
 
 	def checkCellEmpty(self):
 		if len(self.model.grid.get_cell_list_contents((self.x, self.y))) != 1:
-			self.x,self.y = self.pos
+			self.x, self.y = self.pos
 
 	def moveRandom(self):
-		#print('trying to move randomly to break lock')
-		if self.random.choice([True,False]):
-			self.x += self.random.randint(-1,1)
+		# print('trying to move randomly to break lock')
+		if self.random.choice([True, False]):
+			self.x += self.random.randint(-1, 1)
 		else:
-			self.y += self.random.randint(-1,1)
-		#print('randomly trying:',self.x,self.y,'from ',self.pos)
+			self.y += self.random.randint(-1, 1)
+		# print('randomly trying:', self.x, self.y, 'from ', self.pos)
 
 	def moveTowardsGoal(self):
 
-		#print('trying to get to goal: ',self.goal,'from ',self.x,self.y)
-		
+		# print('trying to get to goal: ', self.goal, 'from ', self.x, self.y)
 		if self.pos == self.goal:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
 				self.dropOff()
-				#print('item dropped off at goal, deleting goal')
+				# print('item dropped off at goal, deleting goal')
 				self.goal = None
 				self.busy = False
 			else:
 				hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
-				#print('Found current Job item',hovering_over)
+				# print('Found current Job item', hovering_over)
 				self.checkOpenOrders(hovering_over)
 
 		else:
 			directionVec = (abs(self.goal[0] - self.x), abs(self.goal[1] - self.y))
-			#print(self.goal)
-			#print(self.pos)
-			prob_x = directionVec[0]/(directionVec[0]+directionVec[1])
-			prob_y = directionVec[1]/(directionVec[0]+directionVec[1])
-			#print(prob_x,prob_y)
-			direction = self.model.random.choices([True,False],(prob_x,prob_y))[0]
-			#print(direction)
+			# print(self.goal)
+			# print(self.pos)
+			prob_x = directionVec[0] / (directionVec[0] + directionVec[1])
+			prob_y = directionVec[1] / (directionVec[0] + directionVec[1])
+			# print(prob_x, prob_y)
+			direction = self.model.random.choices([True, False], (prob_x, prob_y))[0]
+			# print(direction)
 
 			if direction:
 				if self.goal[0] > self.x:
@@ -305,49 +299,35 @@ class Robot(Agent):
 				elif self.goal[1] < self.y:
 					self.y -= 1
 
-
 	def pickupItem(self):
-		#Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
-		#It then calls the cell objects giveItem function and takes the output of that as it's new inventory.
+		# Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
+		# It then calls the cell objects giveItem function and takes the output of that as it's new inventory.
 		if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'Bin':
 			self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
 
-
 	def dropOff(self):
-		#For dropping into a bin
-		if self.model.grid.get_cell_list_contents(self.pos)[0].type in ['Bin','DropOff']:
+		# For dropping into a bin
+		if self.model.grid.get_cell_list_contents(self.pos)[0].type in ['Bin', 'DropOff']:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].recieveItem(self.holding[0]):
 				self.holding = []
 				self.busy = False
 
-	def checkOpenOrders(self,item):
-		for i in range(self.warehouseMaxY+1):
-			itemsNeeded = self.model.grid.get_cell_list_contents((self.warehouseMaxX,i))[0].lookingFor()
+	def checkOpenOrders(self, item):
+		for i in range(self.warehouseMaxY + 1):
+			itemsNeeded = self.model.grid.get_cell_list_contents((self.warehouseMaxX, i))[0].lookingFor()
 			# print('------------------')
-			# print('Currently over bin holding: ',item)
-			# print('dropOff',i,'needs:',itemsNeeded)
+			# print('Currently over bin holding: ', item)
+			# print('dropOff', i, 'needs:', itemsNeeded)
 			# print('------------------')
 			if item in itemsNeeded:
-				self.goal = (self.warehouseMaxX,i)
+				self.goal = (self.warehouseMaxX, i)
 				self.pickupItem()
 				return True
-		#print('Robot current goal',self.goal,item)
+		# print('Robot current goal', self.goal, item)
 		self.goal = None
 		self.busy = False
-		#print('goal removed')
+		# print('goal removed')
 		return False
-
-
-
-
-
-
-
-
 
 	def advance(self):
 		None
-
-
-
-

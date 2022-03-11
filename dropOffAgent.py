@@ -1,5 +1,6 @@
 from mesa import Agent
 
+
 class DropOffPoint(Agent):
 	def __init__(self, unique_id, model, x, y, order):
 		super().__init__(unique_id, model)
@@ -32,12 +33,12 @@ class DropOffPoint(Agent):
 			colorOutput.append('#000000')
 		return colorOutput
 
-	def recieveItem(self,item):
+	def recieveItem(self, item):
 		# print('Checking if can recieve ',item,'into',self.contains,'with order',self.order)
-		if item in self.order:			
+		if item in self.order:
 			if item in self.contains:
 				if self.order[item] > self.contains[item]:
-					self.contains.update({item:(self.contains[item]+1)})
+					self.contains.update({item: (self.contains[item] + 1)})
 
 				elif self.order[item] <= self.contains[item]:
 					None
@@ -45,7 +46,7 @@ class DropOffPoint(Agent):
 				else:
 					return False
 			else:
-				self.contains.update({item:1})
+				self.contains.update({item: 1})
 			return True
 		else:
 			return False
@@ -63,21 +64,11 @@ class DropOffPoint(Agent):
 		# print('needed',itemsNeeded)
 		return itemsNeeded
 
-	def bidOn(self,turn,robot):
-		self.bookings.update({turn:robot})
+	def bidOn(self, turn, robot):
+		self.bookings.update({turn: robot})
 
 	def getBookings(self):
 		return self.bookings
 
 	def advance(self):
 		None
-
-
-
-
-
-
-
-
-
-
