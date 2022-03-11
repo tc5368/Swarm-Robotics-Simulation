@@ -80,8 +80,7 @@ class Robot(Agent):
 				self.getJob()
 				self.planAndBid()
 			else:
-
-				if not self.route:
+				if self.route is False:
 					self.route = []
 					self.planAndBid()
 				else:
@@ -110,7 +109,7 @@ class Robot(Agent):
 		self.bookRoute()
 
 	def bookRoute(self):
-		if not self.route:
+		if self.route is False:
 			return
 		else:
 			for turnIndex in range(len(self.route)):
