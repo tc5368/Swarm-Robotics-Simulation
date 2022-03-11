@@ -42,8 +42,10 @@ class Robot(Agent):
 
 		# DELETE
 		# Path finding testing
+		# 
 		if self.unique_id not in [0,1]:
 			return
+		#
 		# DELETE
 
 		#print('------------------------')
@@ -75,7 +77,6 @@ class Robot(Agent):
 		# a* is not correct
 
 		elif self.pathFindingType == 'Path Finding':
-			print('--------------------')
 			if self.busy == False:
 				self.getJob()
 				self.planAndBid()
@@ -88,7 +89,7 @@ class Robot(Agent):
 					print('Follwing Route:',self.route)
 
 					if self.route == []:
-						print('goal found',self.goal)
+						# print('goal found',self.goal)
 						# This section should be made into a function as it's universal to both
 						if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
 							self.dropOff()
@@ -102,11 +103,11 @@ class Robot(Agent):
 					else:
 						self.x, self.y = self.route.pop(0)
 						self.moveRobot()
-			print('--------------------')
 
 	def planAndBid(self):
 		parents = self.pathFind()
 		self.getRouteFromParents(parents)
+		print(self.route)
 		self.bookRoute()
 
 
@@ -115,12 +116,12 @@ class Robot(Agent):
 			return
 		else:
 			for turnIndex in range(len(self.route)):
-				print('Make bid for cell %s on turn %s' %(self.route[turnIndex],turnIndex+self.model.turnCount))
+				# print('Make bid for cell %s on turn %s' %(self.route[turnIndex],turnIndex+self.model.turnCount))
 				self.getBin(self.route[turnIndex]).bidOn(turnIndex+self.model.turnCount,self)
 			
 	def pathFind(self):
 
-		print('pathfinding from %s to %s' %(self.pos,self.goal))
+		# print('pathfinding from %s to %s' %(self.pos,self.goal))
 
 		openList = {}
 		closedList = {}
@@ -134,20 +135,20 @@ class Robot(Agent):
 			cost = openList.pop(node)
 
 			if node == self.goal:
-				print('Goal node found')
+				# print('Goal node found')
 				return parents
 
 			childNodes = self.removeBots(self.model.grid.get_neighbors(pos=node, moore=False))
+			# childNodes = self.filterAvaliable(childNodes)
 
-
-			print('Looking at node',node)
+			# print('Looking at node',node)
 
 			for childNode in childNodes:
 
-				print('Looking at child node',childNode)
+				# print('Looking at child node',childNode)
 
 				if childNode == self.goal:
-					print("Goal node found in the loop")
+					# print("Goal node found in the loop")
 					parents.update({self.goal:node})
 					return parents
 
@@ -155,7 +156,7 @@ class Robot(Agent):
 				h = self.getManhattenDistance(childNode)
 				f_cost = g + h
 
-				print('child cost',f_cost)
+				# print('child cost',f_cost)
 
 				if childNode in openList:
 					if cost < f_cost:
@@ -172,12 +173,10 @@ class Robot(Agent):
 				parents.update({childNode:node})
 
 			closedList.update({node:cost})
-			print()
 		return parents
 
 
 	def getRouteFromParents(self,parents):
-		
 		if parents == {}:
 			self.route = []
 			return
@@ -274,10 +273,6 @@ class Robot(Agent):
 
 		#print('trying to get to goal: ',self.goal,'from ',self.x,self.y)
 		
-		#Moving diagonally... Need to remove.
-		#
-		#Could add bias here, can work out a x,y vector and then change the probability of which direction to go based on the angle of the vector.
-		#
 		if self.pos == self.goal:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
 				self.dropOff()

@@ -66,6 +66,9 @@ class DropOffPoint(Agent):
 	def bidOn(self,turn,robot):
 		self.bookings.update({turn:robot})
 
+	def getBookings(self):
+		return self.bookings
+
 	def advance(self):
 		None
 
