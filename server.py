@@ -97,8 +97,6 @@ DevMode = True
 
 # Grid size cannot be changed while running.
 GridSize = 15
-GridSizeHeight = 1000
-GridSizeWidth = 1000
 
 pathFindingType = "Path Finding"
 # pathFindingType = "Blind Goal"
@@ -106,13 +104,16 @@ pathFindingType = "Path Finding"
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount": 75,
+	"robotCount": 5,
 	"gridSize": GridSize,
-	"UniqueItems": 3,
+	"UniqueItems": 5,
 	"MaxStockPerOrder": 3,
 	"pathFindingType": pathFindingType
 }
 
+CellSize = 1000 / GridSize
+GridSizeHeight = CellSize * GridSize
+GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
 
 # Added slides to be used but also for development will continue using default settings
 # model_params = {
@@ -130,7 +131,7 @@ model_params = {
 
 
 # Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
-grid = CanvasGrid(Apperance, model_params["gridSize"], model_params["gridSize"], GridSizeHeight, GridSizeWidth)
+grid = CanvasGrid(Apperance, model_params["gridSize"]+model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 # Startes the visuliation using the given model, sets the page title and the model starting settings.
 #

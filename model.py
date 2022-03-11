@@ -22,6 +22,7 @@ class WarehouseModel(Model):
 		self.height = gridSize
 
 		self.grid = MultiGrid(self.width, self.height, False)
+		print(self.width, self.height)
 
 		# To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
 		self.schedule = SimultaneousActivation(self)
