@@ -8,7 +8,7 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 
 def Apperance(agent):
-	#Changes the robots colour based on the task it is undertaking
+	# Changes the robots colour based on the task it is undertaking
 	if agent.type == "Robot":
 		if agent.holding == []:
 			robotImage = 'resources/Robot.png'
