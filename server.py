@@ -59,7 +59,7 @@ def Apperance(agent):
 					 "Color": binColour,
 					 "w":0.5,
 					 "h":0.5,
-					 "scale": 0.5}
+					 "scale": 0.75}
 
 	# elif agent.type == "Start":
 
