@@ -11,7 +11,7 @@ from orders import *
 class WarehouseModel(Model):
 	# This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType):
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode):
 		# Allows the model to continue to run.
 		self.running = True
 		# Number of robots in the warehouse
@@ -24,7 +24,10 @@ class WarehouseModel(Model):
 
 		self.widthWithOrderQueue = gridSize + UniqueItems
 
-		self.grid = MultiGrid(self.widthWithOrderQueue, self.height, False)
+		if devMode:
+			self.grid = MultiGrid(self.widthWithOrderQueue, self.height, False)
+		else:
+			self.grid = MultiGrid(self.width, self.height, False)
 
 		# To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
 		self.schedule = SimultaneousActivation(self)
@@ -39,14 +42,14 @@ class WarehouseModel(Model):
 		for i in range(self.height):
 			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=generate_order(UniqueItems, MaxStockPerOrder, ((self.width * self.height) - self.height)))
 			self.grid.place_agent(DropOffCell, (DropOffCell.x, DropOffCell.y))
-			print(DropOffCell.order)
 
-			toLabel = DropOffCell.getOrder()
-			for ix in range(len(toLabel)):
-				item, count = toLabel.popitem()
-				labelAgent = Label(item, self, x=self.width + ix, y=i, item=item, count=count)
-				self.grid.place_agent(labelAgent, (labelAgent.x, labelAgent.y))
-				print('----', labelAgent.item, labelAgent.count)
+			if not devMode:
+				# Adds in the labels on the right hand side of the grid based on the order in the dropoff.
+				toLabel = DropOffCell.getOrder()
+				for ix in range(len(toLabel)):
+					item, count = toLabel.popitem()
+					labelAgent = Label(item, self, x=self.width + ix, y=i, item=item, count=count)
+					self.grid.place_agent(labelAgent, (labelAgent.x, labelAgent.y))
 
 		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
 		GridContents = allocate_items_to_grid(((self.width * self.height) - self.height))
@@ -86,13 +89,13 @@ class WarehouseModel(Model):
 			#
 			#
 			#
-			#
-			# cell = self.grid.get_cell_list_contents((newRobot.x, newRobot.y))[0]
-			# toRemove = cell.peekItem()
-			# for Celly in range(self.height):
-			# 	gridCell = self.grid.get_cell_list_contents((self.width - 1, Celly))[0]
-			# 	if toRemove in gridCell.order:
-			# 		gridCell.order.pop(toRemove)
+			if not devMode:
+				cell = self.grid.get_cell_list_contents((newRobot.x, newRobot.y))[0]
+				toRemove = cell.peekItem()
+				for Celly in range(self.height):
+					gridCell = self.grid.get_cell_list_contents((self.width - 1, Celly))[0]
+					if toRemove in gridCell.order:
+						gridCell.order.pop(toRemove)
 			#
 			#
 			#

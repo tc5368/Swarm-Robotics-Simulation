@@ -16,7 +16,7 @@ def Apperance(agent):
 			robotImage = 'resources/Robot Busy.png'
 
 		robotColor = "Red"
-		if DevMode:
+		if devMode:
 			robotImage = 'rect'
 		if agent.holding == []:
 			robotColor = "Blue"
@@ -39,7 +39,7 @@ def Apperance(agent):
 		formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
 		bin_image = "resources/" + formattedItem + ".png"
 
-		if DevMode:
+		if devMode:
 			bin_image = 'rect'
 
 		binColour = "white"
@@ -94,9 +94,9 @@ def Apperance(agent):
 	return portrayal
 
 
-# DevMode - just changes visulisations.
-DevMode = True
-# DevMode = False
+# devMode - just changes visulisations.
+devMode = True
+# devMode = False
 
 # Grid size cannot be changed while running.
 GridSize = 15
@@ -110,20 +110,30 @@ model_params = {
 	"robotCount": 12,
 	"gridSize": GridSize,
 	"UniqueItems": 5,
-	"MaxStockPerOrder": 1,
-	"pathFindingType": pathFindingType
+	"MaxStockPerOrder": 3,
+	"pathFindingType": pathFindingType,
+	"devMode": devMode
 }
 
-CellSize = 1000 / GridSize
-GridSizeHeight = CellSize * GridSize
-GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
+if not devMode:
+	CellSize = 1000 / GridSize
+	GridSizeHeight = CellSize * GridSize
+	GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
+	grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
+
+else:
+	GridSizeHeight = 1500
+	GridSizeWidth = 1500
+	grid = CanvasGrid(Apperance, model_params["gridSize"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
+
 
 # Added slides to be used but also for development will continue using default settings
 # model_params = {
 #     "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
 #     "gridSize": GridSize,
 #     "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
-#     "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10)
+#     "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10),
+#     "devMode": devMode
 # }
 
 
@@ -134,7 +144,7 @@ GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
 
 
 # Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
-grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
+# grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 # Startes the visuliation using the given model, sets the page title and the model starting settings.
 #
