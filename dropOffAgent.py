@@ -39,6 +39,7 @@ class DropOffPoint(Agent):
 			if item in self.contains:
 				if self.order[item] > self.contains[item]:
 					self.contains.update({item: (self.contains[item] + 1)})
+					self.updateLabels()
 
 				elif self.order[item] <= self.contains[item]:
 					None
@@ -47,13 +48,28 @@ class DropOffPoint(Agent):
 					return False
 			else:
 				self.contains.update({item: 1})
+				self.updateLabels()
 			return True
 		else:
 			return False
 
+	def updateLabels(self):
+		for item in self.order:
+			if item in self.contains:
+				if self.contains[item] == self.order[item]:
+					self.clearItem(item)
+
+	def clearItem(self, item):
+		for ix in range(1, len(self.order) + 1):
+			labelAgent = self.model.grid.get_cell_list_contents((self.pos[0] + ix, self.pos[1]))
+			if labelAgent == []:
+				continue
+			labelAgent = labelAgent[0]
+			if labelAgent.item == item:
+				self.model.grid.remove_agent(labelAgent)
+
 	def lookingFor(self):
 		itemsNeeded = []
-
 		# print('checking',self.order,self.contains)
 		for item in self.order:
 			if item in self.contains:
@@ -64,11 +80,11 @@ class DropOffPoint(Agent):
 		# print('needed',itemsNeeded)
 		return itemsNeeded
 
+	def getOrder(self):
+		return self.order.copy()
+
 	def bidOn(self, turn, robot):
 		self.bookings.update({turn: robot})
 
 	def getBookings(self):
 		return self.bookings
-
-	def advance(self):
-		None

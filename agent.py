@@ -42,8 +42,8 @@ class Robot(Agent):
 
 		# DELETE
 		# Path finding testing
-		if self.unique_id not in [0, 1]:
-			return
+		# if self.unique_id not in [0, 1]:
+		# 	return
 		#
 		# DELETE
 

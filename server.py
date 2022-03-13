@@ -58,15 +58,18 @@ def Apperance(agent):
 					"h": 0.5,
 					"scale": 0.75}
 
-	# elif agent.type == "Start":
+	elif agent.type == "Label":
 
-	# 	portrayal = {"Shape": "rect",
-	# 				 "Filled": "true",
-	# 				 "Layer": 'WarehouseFloor',
-	# 				 "Name": "Starting Point",
-	# 				 "Color": 'green',
-	# 				 "w": 1,
-	# 				 "h": 1}
+		formattedItem = str(agent.item).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
+		label_image = "resources/" + formattedItem + ".png"
+
+		portrayal = {"Shape": label_image,
+					"Filled": "true",
+					"Layer": 'WarehouseFloor',
+					"Name": agent.unique_id,
+					"Color": 'green',
+					"w": 1,
+					"h": 1}
 
 	elif agent.type == "DropOff":
 
@@ -98,16 +101,16 @@ DevMode = True
 # Grid size cannot be changed while running.
 GridSize = 15
 
-pathFindingType = "Path Finding"
-# pathFindingType = "Blind Goal"
+# pathFindingType = "Path Finding"
+pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount": 5,
+	"robotCount": 12,
 	"gridSize": GridSize,
 	"UniqueItems": 5,
-	"MaxStockPerOrder": 3,
+	"MaxStockPerOrder": 1,
 	"pathFindingType": pathFindingType
 }
 
@@ -124,14 +127,14 @@ GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
 # }
 
 
-# Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
+# Confirms th§at the robot placing wont get stuck in an infite loop trying to fit robots.
 # if model_params["robotCount"].value >= (model_params["gridSize"].value * (model_params["gridSize"].value-1)):
 # 	print('Invalid Setup too many robots for the grid')
 # 	exit()
 
 
 # Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
-grid = CanvasGrid(Apperance, model_params["gridSize"]+model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
+grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 # Startes the visuliation using the given model, sets the page title and the model starting settings.
 #

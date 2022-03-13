@@ -61,6 +61,3 @@ class Bin(Agent):
 
 	def getBookings(self):
 		return self.bookings
-
-	def advance(self):
-		None
