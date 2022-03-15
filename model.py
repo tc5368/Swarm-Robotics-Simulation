@@ -24,7 +24,7 @@ class WarehouseModel(Model):
 
 		self.widthWithOrderQueue = gridSize + UniqueItems
 
-		if devMode:
+		if displayMode:
 			self.grid = MultiGrid(self.widthWithOrderQueue, self.height, False)
 		else:
 			self.grid = MultiGrid(self.width, self.height, False)
@@ -49,6 +49,7 @@ class WarehouseModel(Model):
 				for ix in range(len(toLabel)):
 					item, count = toLabel.popitem()
 					labelAgent = Label(item, self, x=self.width + ix, y=i, item=item, count=count)
+					print(labelAgent.x, labelAgent.y)
 					self.grid.place_agent(labelAgent, (labelAgent.x, labelAgent.y))
 
 		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
