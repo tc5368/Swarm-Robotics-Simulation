@@ -70,8 +70,6 @@ class Robot(Agent):
 			self.checkDeadLock()
 			self.moveRobot()
 
-		# a* is not correct
-
 		elif self.pathFindingType == 'Path Finding':
 			if not self.busy:
 				self.getJob()

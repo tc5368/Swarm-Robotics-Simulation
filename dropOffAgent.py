@@ -2,7 +2,7 @@ from mesa import Agent
 
 
 class DropOffPoint(Agent):
-	def __init__(self, unique_id, model, x, y, order):
+	def __init__(self, unique_id, model, x, y, order, displayMode):
 		super().__init__(unique_id, model)
 
 		self.x = x
@@ -15,6 +15,8 @@ class DropOffPoint(Agent):
 		self.complete = False
 
 		self.bookings = {}
+
+		self.displayMode = displayMode
 
 	def checkComplete(self):
 		if self.contains == self.order:
@@ -39,7 +41,8 @@ class DropOffPoint(Agent):
 			if item in self.contains:
 				if self.order[item] > self.contains[item]:
 					self.contains.update({item: (self.contains[item] + 1)})
-					self.updateLabels()
+					if self.displayMode:
+						self.updateLabels()
 
 				elif self.order[item] <= self.contains[item]:
 					None
@@ -48,7 +51,8 @@ class DropOffPoint(Agent):
 					return False
 			else:
 				self.contains.update({item: 1})
-				self.updateLabels()
+				if self.displayMode:
+					self.updateLabels()
 			return True
 		else:
 			return False

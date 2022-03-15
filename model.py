@@ -39,8 +39,9 @@ class WarehouseModel(Model):
 
 		# Adding dropoff bins that will each represent 1 order to be filled.
 		# Idea to have the far right coloumn on the grid be all dropoff points.
+		numberOfCells = ((self.width * self.height) - self.height)
 		for i in range(self.height):
-			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=generate_order(UniqueItems, MaxStockPerOrder, ((self.width * self.height) - self.height)))
+			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=generate_order(UniqueItems, MaxStockPerOrder, numberOfCells), displayMode=displayMode)
 			self.grid.place_agent(DropOffCell, (DropOffCell.x, DropOffCell.y))
 
 			if displayMode:
@@ -49,7 +50,6 @@ class WarehouseModel(Model):
 				for ix in range(len(toLabel)):
 					item, count = toLabel.popitem()
 					labelAgent = Label(item, self, x=self.width + ix, y=i, item=item, count=count)
-					print(labelAgent.x, labelAgent.y)
 					self.grid.place_agent(labelAgent, (labelAgent.x, labelAgent.y))
 
 		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.

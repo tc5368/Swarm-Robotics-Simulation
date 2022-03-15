@@ -102,9 +102,8 @@ devMode = False
 
 # displayMode determines if the icons are shown
 
-# displayMode = False
-displayMode = True
-
+displayMode = False
+# displayMode = True
 
 # Grid size cannot be changed while running.
 GridSize = 15
