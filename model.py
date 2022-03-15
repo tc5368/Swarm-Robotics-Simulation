@@ -11,7 +11,7 @@ from orders import *
 class WarehouseModel(Model):
 	# This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode):
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode, displayMode):
 		# Allows the model to continue to run.
 		self.running = True
 		# Number of robots in the warehouse
@@ -43,7 +43,7 @@ class WarehouseModel(Model):
 			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=generate_order(UniqueItems, MaxStockPerOrder, ((self.width * self.height) - self.height)))
 			self.grid.place_agent(DropOffCell, (DropOffCell.x, DropOffCell.y))
 
-			if not devMode:
+			if displayMode:
 				# Adds in the labels on the right hand side of the grid based on the order in the dropoff.
 				toLabel = DropOffCell.getOrder()
 				for ix in range(len(toLabel)):
@@ -76,7 +76,7 @@ class WarehouseModel(Model):
 				if len(self.grid.get_cell_list_contents((x, y))) == 1:
 					break
 
-			newRobot = Robot(i, self, y=y, x=x, gridInfo=[self.height, self.width], pathFindingType=pathFindingType)
+			newRobot = Robot(i, self, y=y, x=x, gridInfo=[self.height, self.width], pathFindingType=pathFindingType, devMode=devMode)
 			# Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
 

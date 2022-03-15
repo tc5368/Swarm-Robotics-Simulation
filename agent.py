@@ -4,7 +4,7 @@ from mesa import Agent
 class Robot(Agent):
 	# This is the robot agent that moves around the grid fufilling customer orders.
 
-	def __init__(self, unique_id, model, y, x, gridInfo, pathFindingType):
+	def __init__(self, unique_id, model, y, x, gridInfo, pathFindingType, devMode):
 		super().__init__(unique_id, model)
 
 		# Unique ID
@@ -38,16 +38,13 @@ class Robot(Agent):
 		# If the agent is 'dead' and should be removed - not needed in final implementation
 		self.dead = False
 
+		self.devMode = devMode
+
 	def step(self):
 
-		# DELETE
-		# Path finding testing
-		# if self.unique_id not in [0, 1]:
-		# 	return
-		#
-		# DELETE
-
-		# print('------------------------')
+		if self.devMode:
+			if self.unique_id not in [0, 1]:
+				return
 
 		self.x, self.y = self.pos
 

@@ -16,15 +16,16 @@ def Apperance(agent):
 			robotImage = 'resources/Robot Busy.png'
 
 		robotColor = "Red"
-		if devMode:
+
+		if not displayMode:
 			robotImage = 'rect'
+
 		if agent.holding == []:
 			robotColor = "Blue"
 
-			# DELETE
-		if agent.unique_id in [0, 1]:
-			robotColor = "Orange"
-			# DELETE
+		if devMode:
+			if agent.unique_id in [0, 1]:
+				robotColor = "Orange"
 
 		portrayal = {"Shape": robotImage,
 					"Filled": "true",
@@ -36,10 +37,11 @@ def Apperance(agent):
 					"h": 0.6}
 
 	elif agent.type == "Bin":
-		formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
-		bin_image = "resources/" + formattedItem + ".png"
 
-		if devMode:
+		if displayMode:
+			formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
+			bin_image = "resources/" + formattedItem + ".png"
+		else:
 			bin_image = 'rect'
 
 		binColour = "white"
@@ -94,9 +96,15 @@ def Apperance(agent):
 	return portrayal
 
 
-# devMode - just changes visulisations.
+# devMode - just change if the robots all move or jsut 2 example bots for testing
 devMode = True
 # devMode = False
+
+# displayMode determines if the icons are shown
+
+displayMode = False
+# displayMode = True
+
 
 # Grid size cannot be changed while running.
 GridSize = 15
@@ -112,10 +120,11 @@ model_params = {
 	"UniqueItems": 5,
 	"MaxStockPerOrder": 3,
 	"pathFindingType": pathFindingType,
-	"devMode": devMode
+	"devMode": devMode,
+	"displayMode": displayMode
 }
 
-if not devMode:
+if displayMode:
 	CellSize = 1000 / GridSize
 	GridSizeHeight = CellSize * GridSize
 	GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
@@ -137,8 +146,8 @@ else:
 # }
 
 
-# Confirms th§at the robot placing wont get stuck in an infite loop trying to fit robots.
-# if model_params["robotCount"].value >= (model_params["gridSize"].value * (model_params["gridSize"].value-1)):
+# Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
+# if model_params["robotCount"].value >= gridSive * (gridSize - 1):
 # 	print('Invalid Setup too many robots for the grid')
 # 	exit()
 
