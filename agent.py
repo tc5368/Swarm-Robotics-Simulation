@@ -95,8 +95,10 @@ class Robot(Agent):
 							self.busy = False
 						else:
 							hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
-							self.checkOpenOrders(hovering_over)
-							self.planAndBid()
+							if self.checkOpenOrders(hovering_over):
+								self.planAndBid()
+							else:
+								self.busy = False
 						# Until here
 					else:
 						self.x, self.y = self.route.pop(0)
@@ -178,7 +180,7 @@ class Robot(Agent):
 
 		if self.goal not in parents:
 			self.route = False
-			print('Cell is not found, busy')
+			print('Cell is not found, busy', self.goal)
 			return
 
 		beforeNode = parents[self.goal]

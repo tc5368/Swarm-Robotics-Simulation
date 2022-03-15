@@ -101,13 +101,13 @@ devMode = True
 # Grid size cannot be changed while running.
 GridSize = 15
 
-# pathFindingType = "Path Finding"
-pathFindingType = "Blind Goal"
+pathFindingType = "Path Finding"
+# pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount": 12,
+	"robotCount": 10,
 	"gridSize": GridSize,
 	"UniqueItems": 5,
 	"MaxStockPerOrder": 3,
@@ -122,8 +122,8 @@ if not devMode:
 	grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 else:
-	GridSizeHeight = 1500
-	GridSizeWidth = 1500
+	GridSizeHeight = 1000
+	GridSizeWidth = 1000
 	grid = CanvasGrid(Apperance, model_params["gridSize"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 
