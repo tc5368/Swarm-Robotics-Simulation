@@ -84,6 +84,10 @@ class DropOffPoint(Agent):
 		# print('needed',itemsNeeded)
 		return itemsNeeded
 
+	def clearBooking(self):
+		print(self.bookings)
+		print(self.model.turnCount)
+
 	def getOrder(self):
 		return self.order.copy()
 

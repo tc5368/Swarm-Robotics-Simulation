@@ -98,6 +98,11 @@ class Robot(Agent):
 					else:
 						self.x, self.y = self.route.pop(0)
 						self.moveRobot()
+						print(self.pos)
+						self.clearBooking()
+
+	def clearBooking(self):
+		self.getBin(self.pos).clearBooking()
 
 	def planAndBid(self):
 		parents = self.pathFind()
@@ -111,7 +116,7 @@ class Robot(Agent):
 		else:
 			for turnIndex in range(len(self.route)):
 				# print('Make bid for cell %s on turn %s' %(self.route[turnIndex], turnIndex+self.model.turnCount))
-				self.getBin(self.route[turnIndex]).bidOn(turnIndex + self.model.turnCount, self)
+				self.getBin(self.route[turnIndex]).bidOn(turnIndex + self.model.turnCount + 1, self)
 
 	def pathFind(self):
 
@@ -186,6 +191,7 @@ class Robot(Agent):
 				break
 			else:
 				beforeNode = parents[beforeNode]
+		self.route = self.route[1:]
 
 	def cleanGetNeighbors(self, rawNodes):
 		childNodes = []

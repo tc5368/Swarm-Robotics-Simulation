@@ -114,7 +114,7 @@ pathFindingType = "Path Finding"
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount": 3,
+	"robotCount": 2,
 	"gridSize": GridSize,
 	"UniqueItems": 5,
 	"MaxStockPerOrder": 3,

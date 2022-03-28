@@ -53,6 +53,10 @@ class Bin(Agent):
 		else:
 			return False
 
+	def clearBooking(self):
+		print(self.bookings)
+		print(self.model.turnCount)
+
 	def peekItem(self):
 		return self.contains[0]
 
