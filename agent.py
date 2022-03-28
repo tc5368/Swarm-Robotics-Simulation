@@ -214,7 +214,7 @@ class Robot(Agent):
 	def getManhattenDistance(self, cell):
 		try:
 			return abs(cell[0] - self.goal[0]) + abs(cell[1] - self.goal[1])
-		except:
+		except TypeError:
 			print('ERROR with ', cell, self.goal)
 			exit()
 
