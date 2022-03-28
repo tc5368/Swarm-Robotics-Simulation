@@ -61,3 +61,6 @@ class Bin(Agent):
 
 	def getBookings(self):
 		return self.bookings
+
+	def bookingUsed(self):
+		self.bookings.pop(self.model.turnCount - 1)

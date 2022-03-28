@@ -90,7 +90,7 @@ class WarehouseModel(Model):
 			#
 			#
 			#
-			if not devMode:
+			if devMode:
 				cell = self.grid.get_cell_list_contents((newRobot.x, newRobot.y))[0]
 				toRemove = cell.peekItem()
 				for Celly in range(self.height):
