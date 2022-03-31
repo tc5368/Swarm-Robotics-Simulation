@@ -56,7 +56,7 @@ class Bin(Agent):
 	def clearBooking(self):
 		print(self.bookings)
 		print(self.model.getTurnCount())
-		self.bookings.pop(self.model.getTurnCount())
+		# self.bookings.pop(self.model.getTurnCount())
 
 	def peekItem(self):
 		return self.contains[0]

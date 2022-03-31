@@ -49,6 +49,7 @@ class Robot(Agent):
 		self.x, self.y = self.pos
 
 		if self.model.openJobs == []:
+			self.moveRandom()
 			return
 
 		if self.pathFindingType == 'Blind Goal':
@@ -115,8 +116,12 @@ class Robot(Agent):
 			return
 		else:
 			for turnIndex in range(len(self.route)):
-				# print('Make bid for cell %s on turn %s' %(self.route[turnIndex], turnIndex+self.model.turnCount))
+				print('	 Make bid for cell %s on turn %s' % (self.route[turnIndex], turnIndex + self.model.turnCount))
+				print('    ', self.getBin(self.route[turnIndex]).getBookings(), ' are the exsisting bookings on that cell')
+				if (turnIndex + self.model.turnCount) in self.getBin(self.route[turnIndex]).getBookings():
+					print('		Cell already booked for this turn')
 				self.getBin(self.route[turnIndex]).bidOn(turnIndex + self.model.turnCount + 1, self)
+			print()
 
 	def pathFind(self):
 
@@ -191,7 +196,6 @@ class Robot(Agent):
 				break
 			else:
 				beforeNode = parents[beforeNode]
-		self.route = self.route[1:]
 
 	def cleanGetNeighbors(self, rawNodes):
 		childNodes = []
@@ -242,6 +246,7 @@ class Robot(Agent):
 
 	def moveRobot(self):
 		# print('moving to ', self.x, self.y, 'from ', self.pos)
+		self.checkCellEmpty()
 		self.model.grid.move_agent(self, (self.x, self.y))
 
 	def checkValidCoords(self):

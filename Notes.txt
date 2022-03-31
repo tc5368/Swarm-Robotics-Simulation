@@ -3,6 +3,18 @@ Random points to consider later:
 Force CLosing socket command: lsof -i:8521
 ---------------
 
+
+
+
+if the move robot function stops two colliding just re pathfind
+
+change the deadlock of bots, currently if a pair of bots are trying to get to 
+each others location then they will never move.
+
+deadlock solution, if no movement in 5 turns randomly move ?
+
+fix dropoff
+
 -----------
 
 Idea for developing a path finding algorithm.
