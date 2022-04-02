@@ -233,6 +233,8 @@ class Robot(Agent):
 
 	def getJob(self):
 		toCollect = self.model.openJobs.pop(0)
+		print('Need to update this function')
+		print('the job should include the dropoff that ordered the item.')
 		self.goal = self.model.getItemLocation(toCollect)
 		self.busy = True
 
