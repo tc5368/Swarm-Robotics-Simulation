@@ -41,7 +41,6 @@ def Apperance(agent):
 		if displayMode:
 			formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
 			bin_image = "resources/" + formattedItem + ".png"
-			print(bin_image)
 		else:
 			bin_image = 'rect'
 
