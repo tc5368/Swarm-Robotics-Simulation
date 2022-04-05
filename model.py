@@ -135,10 +135,9 @@ class WarehouseModel(Model):
 		self.openJobs = []
 		for Celly in range(self.height):
 			gridCell = self.grid.get_cell_list_contents((self.width - 1, Celly))[0]
-			if gridCell.type == 'DropOff':
-				itemsNeeded = gridCell.lookingFor()
-				for item in itemsNeeded:
-					needed.append(item)
+			itemsNeeded = gridCell.lookingFor()
+			for item in itemsNeeded:
+				needed.append([Celly, item])
 		self.random.shuffle(needed)
 		for i in needed:
 			self.openJobs.append(i)

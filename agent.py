@@ -91,6 +91,7 @@ class Robot(Agent):
 							self.busy = False
 						else:
 							hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
+
 							if self.checkOpenOrders(hovering_over):
 								self.planAndBid()
 							else:
@@ -233,9 +234,8 @@ class Robot(Agent):
 
 	def getJob(self):
 		toCollect = self.model.openJobs.pop(0)
-		print('Need to update this function')
-		print('the job should include the dropoff that ordered the item.')
-		self.goal = self.model.getItemLocation(toCollect)
+		self.currentOrderDropOff = toCollect[0]
+		self.goal = self.model.getItemLocation(toCollect[1])
 		self.busy = True
 
 	def checkDeadLock(self):
@@ -322,21 +322,9 @@ class Robot(Agent):
 				self.busy = False
 
 	def checkOpenOrders(self, item):
-		for i in range(self.warehouseMaxY + 1):
-			itemsNeeded = self.model.grid.get_cell_list_contents((self.warehouseMaxX, i))[0].lookingFor()
-			# print('------------------')
-			# print('Currently over bin holding: ', item)
-			# print('dropOff', i, 'needs:', itemsNeeded)
-			# print('------------------')
-			if item in itemsNeeded:
-				self.goal = (self.warehouseMaxX, i)
-				self.pickupItem()
-				return True
-		# print('Robot current goal', self.goal, item)
-		self.goal = None
-		self.busy = False
-		# print('goal removed')
-		return False
+		self.pickupItem()
+		self.goal = (self.warehouseMaxX, self.currentOrderDropOff)
+		return True
 
 	def advance(self):
 		None

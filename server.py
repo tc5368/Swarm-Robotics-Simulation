@@ -97,13 +97,13 @@ def Apperance(agent):
 
 
 # devMode - just change if the robots all move or jsut 2 example bots for testing
-devMode = True
-# devMode = False
+# devMode = True
+devMode = False
 
 # displayMode determines if the icons are shown
 
-# displayMode = False
-displayMode = True
+displayMode = False
+# displayMode = True
 
 # Grid size cannot be changed while running.
 GridSize = 10
@@ -114,7 +114,7 @@ pathFindingType = "Path Finding"
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount": 1,
+	"robotCount": 2,
 	"gridSize": GridSize,
 	"UniqueItems": 5,
 	"MaxStockPerOrder": 3,
