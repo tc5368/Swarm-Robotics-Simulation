@@ -108,13 +108,13 @@ displayMode = False
 # Grid size cannot be changed while running.
 GridSize = 10
 
-pathFindingType = "Path Finding"
-# pathFindingType = "Blind Goal"
+# pathFindingType = "Path Finding"
+pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
 model_params = {
-	"robotCount": 2,
+	"robotCount": 15,
 	"gridSize": GridSize,
 	"UniqueItems": 5,
 	"MaxStockPerOrder": 3,

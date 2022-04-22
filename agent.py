@@ -72,6 +72,11 @@ class Robot(Agent):
 			self.moveRobot()
 
 		elif self.pathFindingType == 'Path Finding':
+
+			print('-------- Robot Info --------')
+			print(self.pos, self.goal, self.unique_id, self.holding, self.route, self.busy)
+			print('--------            --------')
+
 			if not self.busy:
 				self.getJob()
 				self.planAndBid()
@@ -85,12 +90,17 @@ class Robot(Agent):
 					if self.route == []:
 						# print('goal found', self.goal)
 						# This section should be made into a function as it's universal to both
-						if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':
-							self.dropOff()
+						cell = self.getBin(self.pos)
+						if cell.type == 'DropOff':
+							if self.holding == []:
+								print('trapped in drop off')
+							else:
+								self.dropOff()
 							self.goal = None
 							self.busy = False
+							
 						else:
-							hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
+							hovering_over = cell.peekItem()
 
 							if self.checkOpenOrders(hovering_over):
 								self.planAndBid()
@@ -100,8 +110,7 @@ class Robot(Agent):
 					else:
 						self.x, self.y = self.route.pop(0)
 						self.moveRobot()
-						print(self.pos)
-						self.clearBooking()
+						# self.clearBooking()
 
 	def clearBooking(self):
 		self.getBin(self.pos).clearBooking()
@@ -110,7 +119,8 @@ class Robot(Agent):
 		parents = self.pathFind()
 		self.getRouteFromParents(parents)
 		print(self.route)
-		self.bookRoute()
+		# self.bookRoute()
+		print()
 
 	def bookRoute(self):
 		if self.route is False:
@@ -187,16 +197,41 @@ class Robot(Agent):
 		if self.goal not in parents:
 			self.route = False
 			print('Cell is not found, busy', self.goal)
-			return
+			print('Moving towards cell')
+			print(self.pos, self.goal, self.route, self.unique_id)
+			# print('moving blind in the correct direction')
+			# self.headRightDirection()
+			# self.moveRobot()
 
-		beforeNode = parents[self.goal]
-		self.route.insert(0, self.goal)
-		while True:
-			self.route.insert(0, beforeNode)
-			if beforeNode == self.pos:
-				break
-			else:
-				beforeNode = parents[beforeNode]
+			# Get the neighbours of its current loction and then chack their manhatten distances
+			# then just move to the next clear grid square
+			# or an equally good square to stope head on head deadlock
+			self.fixPath()
+
+		else:
+			beforeNode = parents[self.goal]
+			self.route.insert(0, self.goal)
+			while True:
+				self.route.insert(0, beforeNode)
+				if beforeNode == self.pos:
+					break
+				else:
+					beforeNode = parents[beforeNode]
+
+	def fixPath(self):
+		neighborCells = self.model.grid.get_neighborhood(self.pos, False)
+		validCells = []
+		for cell in neighborCells:
+			gridCellInfo = self.model.grid.get_cell_list_contents(cell)
+			if len(gridCellInfo) == 1:
+				validCells.append(gridCellInfo[0])
+
+		cellCosts = {}
+		for i in validCells:
+			cellCosts.update({i.pos: self.getManhattenDistance(i.pos)})
+		bestOption = min(cellCosts, key=cellCosts.get)
+		self.x, self.y = bestOption
+		self.moveRobot()
 
 	def cleanGetNeighbors(self, rawNodes):
 		childNodes = []
@@ -286,27 +321,29 @@ class Robot(Agent):
 				hovering_over = self.model.grid.get_cell_list_contents(self.pos)[0].peekItem()
 				# print('Found current Job item', hovering_over)
 				self.checkOpenOrders(hovering_over)
-
 		else:
-			directionVec = (abs(self.goal[0] - self.x), abs(self.goal[1] - self.y))
-			# print(self.goal)
-			# print(self.pos)
-			prob_x = directionVec[0] / (directionVec[0] + directionVec[1])
-			prob_y = directionVec[1] / (directionVec[0] + directionVec[1])
-			# print(prob_x, prob_y)
-			direction = self.model.random.choices([True, False], (prob_x, prob_y))[0]
-			# print(direction)
+			self.headRightDirection()
 
-			if direction:
-				if self.goal[0] > self.x:
-					self.x += 1
-				elif self.goal[0] < self.x:
-					self.x -= 1
-			else:
-				if self.goal[1] > self.y:
-					self.y += 1
-				elif self.goal[1] < self.y:
-					self.y -= 1
+	def headRightDirection(self):
+		directionVec = (abs(self.goal[0] - self.x), abs(self.goal[1] - self.y))
+		# print(self.goal)
+		# print(self.pos)
+		prob_x = directionVec[0] / (directionVec[0] + directionVec[1])
+		prob_y = directionVec[1] / (directionVec[0] + directionVec[1])
+		# print(prob_x, prob_y)
+		direction = self.model.random.choices([True, False], (prob_x, prob_y))[0]
+		# print(direction)
+
+		if direction:
+			if self.goal[0] > self.x:
+				self.x += 1
+			elif self.goal[0] < self.x:
+				self.x -= 1
+		else:
+			if self.goal[1] > self.y:
+				self.y += 1
+			elif self.goal[1] < self.y:
+				self.y -= 1
 
 	def pickupItem(self):
 		# Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
@@ -316,10 +353,11 @@ class Robot(Agent):
 
 	def dropOff(self):
 		# For dropping into a bin
-		if self.model.grid.get_cell_list_contents(self.pos)[0].type in ['Bin', 'DropOff']:
-			if self.model.grid.get_cell_list_contents(self.pos)[0].recieveItem(self.holding[0]):
-				self.holding = []
-				self.busy = False
+		cell = self.getBin(self.pos)
+		print(self.holding, self.pos, self.goal, self.unique_id, self.tasks)
+		if cell.recieveItem(self.holding[0]):
+			self.holding = []
+			self.busy = False
 
 	def checkOpenOrders(self, item):
 		self.pickupItem()
