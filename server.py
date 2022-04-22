@@ -98,8 +98,8 @@ def Apperance(agent):
 
 
 # devMode - just change if the robots all move or jsut 2 example bots for testing
-# devMode = True
-devMode = False
+devMode = True
+# devMode = False
 
 # displayMode determines if the icons are shown
 
@@ -107,7 +107,7 @@ devMode = False
 # displayMode = True
 
 # Grid size cannot be changed while running.
-GridSize = 10
+GridSize = 15
 
 pathFindingType = "Path Finding"
 # pathFindingType = "Blind Goal"
@@ -131,24 +131,14 @@ model_params = {
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10),
 	"devMode": devMode,
-	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
+	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
 
-print(model_params["displayMode"].value)
-print('help')
-
-if model_params["displayMode"].value:
-	CellSize = 1000 / GridSize
-	GridSizeHeight = CellSize * GridSize
-	GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
-	print(GridSizeWidth, GridSizeHeight)
-	grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
-
-else:
-	GridSizeHeight = 1000
-	GridSizeWidth = 1000
-	grid = CanvasGrid(Apperance, model_params["gridSize"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
+CellSize = 1000 / GridSize
+GridSizeHeight = CellSize * GridSize
+GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
+grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 
 # Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.

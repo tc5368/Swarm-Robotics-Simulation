@@ -73,9 +73,9 @@ class Robot(Agent):
 
 		elif self.pathFindingType == 'Path Finding':
 
-			print('-------- Robot Info --------')
-			print(self.pos, self.goal, self.unique_id, self.holding, self.route, self.busy)
-			print('--------            --------')
+			# print('-------- Robot Info --------')
+			# print(self.pos, self.goal, self.unique_id, self.holding, self.route, self.busy)
+			# print('--------            --------')
 
 			if not self.busy:
 				self.getJob()
