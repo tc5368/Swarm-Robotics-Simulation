@@ -23,7 +23,7 @@ def Apperance(agent):
 		if agent.holding == []:
 			robotColor = "Blue"
 
-		if devMode:
+		if model_params["devMode"].value:
 			if agent.unique_id in [0, 1]:
 				robotColor = "Orange"
 
@@ -98,8 +98,8 @@ def Apperance(agent):
 
 
 # devMode - just change if the robots all move or jsut 2 example bots for testing
-devMode = True
-# devMode = False
+# devMode = True
+devMode = False
 
 # displayMode determines if the icons are shown
 
@@ -126,11 +126,11 @@ pathFindingType = "Path Finding"
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
-	"robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, (GridSize ** 2 - GridSize)),
+	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15), 1, (GridSize ** 2 - GridSize)),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10),
-	"devMode": devMode,
+	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
 	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
