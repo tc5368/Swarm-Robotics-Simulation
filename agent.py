@@ -98,7 +98,7 @@ class Robot(Agent):
 								self.dropOff()
 							self.goal = None
 							self.busy = False
-							
+
 						else:
 							hovering_over = cell.peekItem()
 
