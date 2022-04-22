@@ -4,7 +4,7 @@ from binAgent import *
 from dropOffAgent import *
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
-# from mesa.visualization.UserParam import UserSettableParameter
+from mesa.visualization.UserParam import UserSettableParameter
 
 
 def Apperance(agent):
@@ -17,7 +17,7 @@ def Apperance(agent):
 
 		robotColor = "Red"
 
-		if not displayMode:
+		if not model_params["displayMode"].value:
 			robotImage = 'rect'
 
 		if agent.holding == []:
@@ -38,13 +38,13 @@ def Apperance(agent):
 
 	elif agent.type == "Bin":
 
-		if displayMode:
+		if model_params["displayMode"].value:
 			formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
 			bin_image = "resources/" + formattedItem + ".png"
 		else:
 			bin_image = 'rect'
 
-		binColour = "white"
+		binColour = "grey"
 		if agent.bookings != {}:
 			binColour = "green"
 
@@ -56,8 +56,8 @@ def Apperance(agent):
 					"Stock": agent.stock,
 					"Bookings": str(agent.bookings),
 					"Color": binColour,
-					"w": 0.5,
-					"h": 0.5,
+					"w": 1,
+					"h": 1,
 					"scale": 0.75}
 
 	elif agent.type == "Label":
@@ -69,9 +69,10 @@ def Apperance(agent):
 					"Filled": "true",
 					"Layer": 'WarehouseFloor',
 					"Name": agent.unique_id,
-					"Color": 'green',
+					"Color": 'White',
 					"w": 1,
-					"h": 1}
+					"h": 1,
+					"scale": 0.75}
 
 	elif agent.type == "DropOff":
 
@@ -102,47 +103,52 @@ devMode = False
 
 # displayMode determines if the icons are shown
 
-displayMode = False
+# displayMode = False
 # displayMode = True
 
 # Grid size cannot be changed while running.
 GridSize = 10
 
-# pathFindingType = "Path Finding"
-pathFindingType = "Blind Goal"
+pathFindingType = "Path Finding"
+# pathFindingType = "Blind Goal"
 
 
 # Default values that control the visulisation can eventully be changed to sliders
+# model_params = {
+# 	"robotCount": 20,
+# 	"gridSize": GridSize,
+# 	"UniqueItems": 5,
+# 	"MaxStockPerOrder": 3,
+# 	"pathFindingType": pathFindingType,
+# 	"devMode": devMode,
+# 	"displayMode": displayMode
+# }
+
+# # Added slides to be used but also for development will continue using default settings
 model_params = {
-	"robotCount": 20,
+	"robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, (GridSize ** 2 - GridSize)),
 	"gridSize": GridSize,
-	"UniqueItems": 5,
-	"MaxStockPerOrder": 3,
-	"pathFindingType": pathFindingType,
+	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
+	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10),
 	"devMode": devMode,
-	"displayMode": displayMode
+	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
+	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
 
-if displayMode:
+print(model_params["displayMode"].value)
+print('help')
+
+if model_params["displayMode"].value:
 	CellSize = 1000 / GridSize
 	GridSizeHeight = CellSize * GridSize
-	GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"])
-	grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
+	GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
+	print(GridSizeWidth, GridSizeHeight)
+	grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
 else:
 	GridSizeHeight = 1000
 	GridSizeWidth = 1000
 	grid = CanvasGrid(Apperance, model_params["gridSize"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
-
-
-# Added slides to be used but also for development will continue using default settings
-# model_params = {
-#     "robotCount": UserSettableParameter("slider", "Robot Initial Count", 1, 1, 50),
-#     "gridSize": GridSize,
-#     "UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
-#     "MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10),
-#     "devMode": devMode
-# }
 
 
 # Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.

@@ -4,6 +4,13 @@ Force CLosing socket command: lsof -i:8521
 ---------------
 
 
+replace the display mode icons
+get best images then use script to downsample
+add in grey background to establish diference
+add boarder maybe.
+
+
+
 
 if the a* finds no route then find route to the cell without obstacles, then move 1 step along the route and try again.
 
