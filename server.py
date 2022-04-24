@@ -2,7 +2,7 @@ from model import *
 from agent import *
 from binAgent import *
 from dropOffAgent import *
-from mesa.visualization.modules import CanvasGrid
+from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
@@ -45,8 +45,8 @@ def Apperance(agent):
 			bin_image = 'rect'
 
 		binColour = "grey"
-		if agent.bookings != {}:
-			binColour = "green"
+		if agent.stock == 0:
+			binColour = "red"
 
 		portrayal = {"Shape": bin_image,
 					"Filled": "true",
@@ -107,7 +107,7 @@ pathFindingType = "Path Finding"
 model_params = {
 	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15), 1, (GridSize ** 2 - GridSize)),
 	"gridSize": GridSize,
-	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
+	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 3, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
 	"StockInBin": UserSettableParameter("slider", "Stock avaliable in each bin", 100, 1, 500),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
@@ -120,7 +120,6 @@ GridSizeHeight = CellSize * GridSize
 GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
 grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
-
 # Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
 # grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
@@ -128,7 +127,12 @@ grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItem
 #
 # server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",
 # {"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth, "UniqueItems":UniqueItemsPerOrder,"MaxStockPerOrder":MaxStockPerOrder})
-server = ModularServer(WarehouseModel, [grid], "Robot Swarm Order Packing Simulation", model_params)
+
+
+chart_element_of = ChartModule([{"Label": "% Ordes Filled", "Color": "#AA0000"}])
+chart_element_im = ChartModule([{"Label": "Items Delivered", "Color": "#666666"}, {"Label": "Average Robot Moves", "Color": "#2BA7AD"}])
+
+server = ModularServer(WarehouseModel, [grid, chart_element_of, chart_element_im], "Robot Swarm Order Packing Simulation", model_params)
 
 # Launch the server
 server.port = 8521  # The default

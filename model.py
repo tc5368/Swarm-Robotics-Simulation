@@ -6,6 +6,7 @@ from labelAgent import *
 from mesa.time import *
 from mesa.space import *
 from orders import *
+from mesa.datacollection import DataCollector
 
 
 class WarehouseModel(Model):
@@ -36,6 +37,9 @@ class WarehouseModel(Model):
 		self.kill_agents = []
 
 		self.turnCount = 0
+
+		self.itemsDelivered = 0
+		self.robotMoves = 0
 
 		# Adding dropoff bins that will each represent 1 order to be filled.
 		# Idea to have the far right coloumn on the grid be all dropoff points.
@@ -111,6 +115,10 @@ class WarehouseModel(Model):
 			# Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
 			#
+			self.datacollector = DataCollector({
+				"% Ordes Filled": lambda m: self.countComplete(),
+				"Items Delivered": lambda m: self.getItemsDelivered(),
+				"Average Robot Moves": lambda m: self.getAvgRobotMoves()})
 
 	def testComplete(self):
 		for i in range(self.height):
@@ -119,6 +127,21 @@ class WarehouseModel(Model):
 			if not self.grid.get_cell_list_contents((self.width - 1, i))[0].checkComplete():
 				return False
 		return True
+
+	def countComplete(self):
+		count = 0
+		for i in range(self.height):
+			if self.grid.get_cell_list_contents((self.width - 1, i))[0].checkComplete():
+				count += 1
+		return (count / self.height) * 100
+
+	def getItemsDelivered(self):
+		return self.itemsDelivered
+
+	def getAvgRobotMoves(self):
+		averageStepsPerRobot = self.robotMoves // self.num_agents
+		# print(averageStepsPerRobot)
+		return averageStepsPerRobot
 
 	def getItemLocation(self, item):
 		for Cellx in range(self.width - 1):
@@ -152,6 +175,7 @@ class WarehouseModel(Model):
 	def step(self):
 		self.turnCount += 1
 		self.schedule.step()
+		self.datacollector.collect(self)
 
 		if self.testComplete():
 			self.running = False

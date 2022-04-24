@@ -85,7 +85,7 @@ class Robot(Agent):
 					self.route = []
 					self.planAndBid()
 				else:
-					print('Follwing Route:', self.route)
+					# print('Follwing Route:', self.route)
 
 					if self.route == []:
 						# print('goal found', self.goal)
@@ -93,7 +93,8 @@ class Robot(Agent):
 						cell = self.getBin(self.pos)
 						if cell.type == 'DropOff':
 							if self.holding == []:
-								print('trapped in drop off')
+								# print('trapped in drop off')
+								None
 							else:
 								self.dropOff()
 							self.goal = None
@@ -118,21 +119,22 @@ class Robot(Agent):
 	def planAndBid(self):
 		parents = self.pathFind()
 		self.getRouteFromParents(parents)
-		print(self.route)
+		# print(self.route)
 		# self.bookRoute()
-		print()
+		# print()
 
 	def bookRoute(self):
 		if self.route is False:
 			return
 		else:
 			for turnIndex in range(len(self.route)):
-				print('	 Make bid for cell %s on turn %s' % (self.route[turnIndex], turnIndex + self.model.turnCount))
-				print('    ', self.getBin(self.route[turnIndex]).getBookings(), ' are the exsisting bookings on that cell')
+				# print('	 Make bid for cell %s on turn %s' % (self.route[turnIndex], turnIndex + self.model.turnCount))
+				# print('    ', self.getBin(self.route[turnIndex]).getBookings(), ' are the exsisting bookings on that cell')
 				if (turnIndex + self.model.turnCount) in self.getBin(self.route[turnIndex]).getBookings():
-					print('		Cell already booked for this turn')
+					# print('		Cell already booked for this turn')
+					None
 				self.getBin(self.route[turnIndex]).bidOn(turnIndex + self.model.turnCount + 1, self)
-			print()
+			# print()
 
 	def pathFind(self):
 
@@ -196,9 +198,9 @@ class Robot(Agent):
 
 		if self.goal not in parents:
 			self.route = False
-			print('Cell is not found, busy', self.goal)
-			print('Moving towards cell')
-			print(self.pos, self.goal, self.route, self.unique_id)
+			# print('Cell is not found, busy', self.goal)
+			# print('Moving towards cell')
+			# print(self.pos, self.goal, self.route, self.unique_id)
 			# print('moving blind in the correct direction')
 			# self.headRightDirection()
 			# self.moveRobot()
@@ -282,8 +284,8 @@ class Robot(Agent):
 		# print(self.deadLock)
 
 	def moveRobot(self):
-		# print('moving to ', self.x, self.y, 'from ', self.pos)
-		self.checkCellEmpty()
+		if self.checkCellEmpty():
+			self.model.robotMoves += 1
 		self.model.grid.move_agent(self, (self.x, self.y))
 
 	def checkValidCoords(self):
@@ -299,6 +301,8 @@ class Robot(Agent):
 	def checkCellEmpty(self):
 		if len(self.model.grid.get_cell_list_contents((self.x, self.y))) != 1:
 			self.x, self.y = self.pos
+		else:
+			return True
 
 	def moveRandom(self):
 		# print('trying to move randomly to break lock')
@@ -354,8 +358,9 @@ class Robot(Agent):
 	def dropOff(self):
 		# For dropping into a bin
 		cell = self.getBin(self.pos)
-		print(self.holding, self.pos, self.goal, self.unique_id, self.tasks)
+		# print(self.holding, self.pos, self.goal, self.unique_id, self.tasks)
 		if cell.recieveItem(self.holding[0]):
+			self.model.itemsDelivered += 1
 			self.holding = []
 			self.busy = False
 
