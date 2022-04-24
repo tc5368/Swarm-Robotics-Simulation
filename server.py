@@ -97,32 +97,11 @@ def Apperance(agent):
 	return portrayal
 
 
-# devMode - just change if the robots all move or jsut 2 example bots for testing
-# devMode = True
-devMode = False
-
-# displayMode determines if the icons are shown
-
-# displayMode = False
-# displayMode = True
-
 # Grid size cannot be changed while running.
 GridSize = 5
 
 pathFindingType = "Path Finding"
 # pathFindingType = "Blind Goal"
-
-
-# Default values that control the visulisation can eventully be changed to sliders
-# model_params = {
-# 	"robotCount": 20,
-# 	"gridSize": GridSize,
-# 	"UniqueItems": 5,
-# 	"MaxStockPerOrder": 3,
-# 	"pathFindingType": pathFindingType,
-# 	"devMode": devMode,
-# 	"displayMode": displayMode
-# }
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
@@ -130,6 +109,7 @@ model_params = {
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
+	"StockInBin": UserSettableParameter("slider", "Stock avaliable in each bin", 100, 1, 500),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
 	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
@@ -139,12 +119,6 @@ CellSize = 1000 / GridSize
 GridSizeHeight = CellSize * GridSize
 GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
 grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
-
-
-# Confirms that the robot placing wont get stuck in an infite loop trying to fit robots.
-# if model_params["robotCount"].value >= gridSive * (gridSize - 1):
-# 	print('Invalid Setup too many robots for the grid')
-# 	exit()
 
 
 # Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.

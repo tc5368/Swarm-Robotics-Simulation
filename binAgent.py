@@ -59,7 +59,10 @@ class Bin(Agent):
 		self.bookings.pop(self.model.getTurnCount())
 
 	def peekItem(self):
-		return self.contains[0]
+		if self.contains == []:
+			return None
+		else:
+			return self.contains[0]
 
 	def bidOn(self, turn, robot):
 		self.bookings.update({turn: robot})

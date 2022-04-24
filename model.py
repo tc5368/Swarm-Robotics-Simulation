@@ -11,7 +11,7 @@ from orders import *
 class WarehouseModel(Model):
 	# This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode, displayMode):
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, StockInBin, pathFindingType, devMode, displayMode):
 		# Allows the model to continue to run.
 		self.running = True
 		# Number of robots in the warehouse
@@ -61,7 +61,7 @@ class WarehouseModel(Model):
 				# The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx) + str(" ") + str(Celly))
 				# Creates a new agent to sit in the cell as a marker
-				newCell = Bin(cellReference, self, x=Cellx, y=Celly, contains=[GridContents.pop()], stock=10)
+				newCell = Bin(cellReference, self, x=Cellx, y=Celly, contains=[GridContents.pop()], stock=StockInBin)
 				# Places the cell agent into their place in the grid
 				self.grid.place_agent(newCell, (newCell.x, newCell.y))
 
@@ -126,9 +126,12 @@ class WarehouseModel(Model):
 				checking = self.grid.get_cell_list_contents((Cellx, Celly))[0]
 				if checking.type == 'Bin':
 					if item == checking.peekItem():
+						if item is None:
+							print('Bin needs restocking at %s %s' % (Cellx, Celly))
 						return (Cellx, Celly)
 		else:
-			return None
+			print('Invalid starting setup, not enough items to fufil orders')
+			exit()
 
 	def getOpenJobs(self):
 		needed = []
