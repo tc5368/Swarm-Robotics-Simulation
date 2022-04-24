@@ -107,7 +107,7 @@ devMode = False
 # displayMode = True
 
 # Grid size cannot be changed while running.
-GridSize = 15
+GridSize = 5
 
 pathFindingType = "Path Finding"
 # pathFindingType = "Blind Goal"
@@ -129,7 +129,7 @@ model_params = {
 	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15), 1, (GridSize ** 2 - GridSize)),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 5, 1, 10),
-	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 10),
+	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
 	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
