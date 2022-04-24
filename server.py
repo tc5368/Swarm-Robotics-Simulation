@@ -97,11 +97,10 @@ def Apperance(agent):
 	return portrayal
 
 
-# Grid size cannot be changed while running.
-GridSize = 5
-
-pathFindingType = "Path Finding"
-# pathFindingType = "Blind Goal"
+# Grid size and charts cannot be changed while running.
+GridSize = 8
+enableCharts = True
+# enableCharts = False
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
@@ -132,7 +131,12 @@ grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItem
 chart_element_of = ChartModule([{"Label": "% Ordes Filled", "Color": "#AA0000"}])
 chart_element_im = ChartModule([{"Label": "Items Delivered", "Color": "#666666"}, {"Label": "Average Robot Moves", "Color": "#2BA7AD"}])
 
-server = ModularServer(WarehouseModel, [grid, chart_element_of, chart_element_im], "Robot Swarm Order Packing Simulation", model_params)
+if enableCharts:
+	settings = [grid, chart_element_of, chart_element_im]
+else:
+	settings = [grid]
+
+server = ModularServer(WarehouseModel, settings, "Robot Swarm Order Packing Simulation", model_params)
 
 # Launch the server
 server.port = 8521  # The default
