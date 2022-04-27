@@ -23,7 +23,8 @@ def Apperance(agent):
 		if agent.holding == []:
 			robotColor = "Blue"
 
-		if model_params["devMode"].value:
+		# if model_params["devMode"].value:
+		if True:
 			if agent.unique_id in [0, 1]:
 				robotColor = "Orange"
 
@@ -99,8 +100,8 @@ def Apperance(agent):
 
 # Grid size and charts cannot be changed while running.
 GridSize = 8
-enableCharts = True
-# enableCharts = False
+# enableCharts = True
+enableCharts = False
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
