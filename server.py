@@ -23,8 +23,8 @@ def Apperance(agent):
 		if agent.holding == []:
 			robotColor = "Blue"
 
-		# if model_params["devMode"].value:
-		if True:
+		# if True:
+		if model_params["devMode"].value:
 			if agent.unique_id in [0, 1]:
 				robotColor = "Orange"
 
@@ -46,15 +46,13 @@ def Apperance(agent):
 			bin_image = 'rect'
 
 		binColour = "grey"
-		if agent.stock == 0:
-			binColour = "red"
 
 		portrayal = {"Shape": bin_image,
 					"Filled": "true",
 					"Layer": 'WarehouseFloor',
 					"Reference": agent.unique_id,
 					"Contains": agent.contains,
-					"Stock": agent.stock,
+					# "Stock": agent.stock,
 					"Bookings": str(agent.bookings),
 					"Color": binColour,
 					"w": 1,
@@ -99,7 +97,7 @@ def Apperance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 8
+GridSize = 10
 # enableCharts = True
 enableCharts = False
 
