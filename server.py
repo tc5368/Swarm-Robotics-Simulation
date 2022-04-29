@@ -16,9 +16,11 @@ def Apperance(agent):
 			robotImage = 'resources/Robot Busy.png'
 
 		robotColor = "Red"
+		robotLayer = 'Robots'
 
 		if not model_params["displayMode"].value:
 			robotImage = 'rect'
+			robotLayer = 'WarehouseFloor'
 
 		if agent.holding == []:
 			robotColor = "Blue"
@@ -31,7 +33,7 @@ def Apperance(agent):
 		portrayal = {"Shape": robotImage,
 					"Filled": "true",
 					"Color": robotColor,
-					"Layer": 'WarehouseFloor',
+					"Layer": robotLayer,
 					"Number": agent.unique_id,
 					"Carrying": agent.holding,
 					"w": 0.6,
