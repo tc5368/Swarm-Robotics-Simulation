@@ -3,6 +3,7 @@ from agent import *
 from binAgent import *
 from dropOffAgent import *
 from labelAgent import *
+from floorAgent import *
 from mesa.time import *
 from mesa.space import *
 from orders import *
@@ -51,6 +52,11 @@ class WarehouseModel(Model):
 			if displayMode:
 				# Adds in the labels on the right hand side of the grid based on the order in the dropoff.
 				toLabel = DropOffCell.getOrder()
+
+				for ix in range(UniqueItems):
+					newFloor = Floor("Floor", self, x=self.width + ix, y=i)
+					self.grid.place_agent(newFloor, (newFloor.x, newFloor.y))
+
 				for ix in range(len(toLabel)):
 					item, count = toLabel.popitem()
 					labelAgent = Label(item, self, x=self.width + ix, y=i, item=item, count=count)

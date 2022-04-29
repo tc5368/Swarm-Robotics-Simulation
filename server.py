@@ -59,6 +59,16 @@ def Apperance(agent):
 					"h": 1,
 					"scale": 0.75}
 
+	elif agent.type == "Floor":
+
+		portrayal = {"Shape": 'rect',
+					"Filled": "true",
+					"Layer": 'WarehouseFloor',
+					"Color": 'grey',
+					"w": 1,
+					"h": 1,
+					"scale": 1}
+
 	elif agent.type == "Label":
 
 		formattedItem = str(agent.item).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
@@ -98,14 +108,14 @@ def Apperance(agent):
 
 # Grid size and charts cannot be changed while running.
 GridSize = 10
-# enableCharts = True
-enableCharts = False
+enableCharts = True
+# enableCharts = False
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
 	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15), 1, (GridSize ** 2 - GridSize)),
 	"gridSize": GridSize,
-	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 3, 1, 10),
+	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
 	"StockInBin": UserSettableParameter("slider", "Stock avaliable in each bin", 100, 1, 500),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),

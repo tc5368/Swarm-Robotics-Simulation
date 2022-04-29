@@ -66,9 +66,9 @@ class DropOffPoint(Agent):
 	def clearItem(self, item):
 		for ix in range(1, len(self.order) + 1):
 			labelAgent = self.model.grid.get_cell_list_contents((self.pos[0] + ix, self.pos[1]))
-			if labelAgent == []:
+			if len(labelAgent) < 2:
 				continue
-			labelAgent = labelAgent[0]
+			labelAgent = labelAgent[1]
 			if labelAgent.item == item:
 				self.model.grid.remove_agent(labelAgent)
 
