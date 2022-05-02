@@ -13,7 +13,7 @@ from mesa.datacollection import DataCollector
 class WarehouseModel(Model):
 	# This is the warehouse model works as the base controller to creat all of the robots
 
-	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, StockInBin, pathFindingType, devMode, displayMode):
+	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode, displayMode):
 		# Allows the model to continue to run.
 		self.running = True
 		# Number of robots in the warehouse
@@ -71,7 +71,7 @@ class WarehouseModel(Model):
 				# The name of the cell it just the coordinates in the grid
 				cellReference = (str(Cellx) + str(" ") + str(Celly))
 				# Creates a new agent to sit in the cell as a marker
-				newCell = Bin(cellReference, self, x=Cellx, y=Celly, contains=[GridContents.pop()], stock=StockInBin)
+				newCell = Bin(cellReference, self, x=Cellx, y=Celly, contains=[GridContents.pop()])
 				# Places the cell agent into their place in the grid
 				self.grid.place_agent(newCell, (newCell.x, newCell.y))
 

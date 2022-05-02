@@ -119,7 +119,6 @@ model_params = {
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
-	"StockInBin": UserSettableParameter("slider", "Stock avaliable in each bin", 100, 1, 500),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
 	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
