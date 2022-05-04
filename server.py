@@ -16,7 +16,7 @@ def Apperance(agent):
 			robotImage = 'resources/Robot Busy.png'
 
 		robotColor = "Red"
-		robotLayer = 'Robots'
+		robotLayer = 'Interaction'
 
 		if not model_params["displayMode"].value:
 			robotImage = 'rect'
@@ -97,7 +97,7 @@ def Apperance(agent):
 
 		portrayal = {"Shape": "rect",
 			"Filled": "true",
-					"Layer": 'WarehouseFloor',
+					"Layer": 'Interaction',
 					"Reference": agent.unique_id,
 					"Order": str(agent.order),
 					"Contains": str(agent.contains),
@@ -109,9 +109,9 @@ def Apperance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 15
-enableCharts = True
-# enableCharts = False
+GridSize = 10
+# enableCharts = True
+enableCharts = False
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
@@ -120,11 +120,11 @@ model_params = {
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
-	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
+	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
 
-CellSize = 1000 / GridSize
+CellSize = 750 / GridSize
 GridSizeHeight = CellSize * GridSize
 GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
 grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
