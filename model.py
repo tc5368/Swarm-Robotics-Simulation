@@ -6,9 +6,7 @@ from labelAgent import *
 from floorAgent import *
 from mesa.time import *
 from mesa.space import *
-from orders import *
 from mesa.datacollection import DataCollector
-
 
 class WarehouseModel(Model):
 	# This is the warehouse model works as the base controller to creat all of the robots
@@ -41,12 +39,13 @@ class WarehouseModel(Model):
 
 		self.itemsDelivered = 0
 		self.robotMoves = 0
+		self.grocery_items = ["tropical fruit", "whole milk", "pip fruit", "other vegetables", "rolls/buns", "pot plants", "citrus fruit", "beef", "frankfurter", "chicken", "butter", "fruit/vegetable juice", "packaged fruit/vegetables", "chocolate", "specialty bar", "butter milk", "bottled water", "yogurt", "sausage", "brown bread", "hamburger meat", "root vegetables", "pork", "pastry", "canned beer", "berries", "coffee", "misc. beverages", "ham", "turkey", "curd cheese", "red/blush wine", "frozen potato products", "flour", "sugar", "frozen meals", "herbs", "soda", "detergent", "grapes", "processed cheese", "fish", "sparkling wine", "newspapers", "pasta", "popcorn", "beverages", "bottled beer", "dessert", "dog food", "specialty chocolate", "condensed milk", "cleaner", "white wine", "meat", "ice cream", "hard cheese", "cream cheese ", "liquor", "pickled vegetables", "liquor (appetizer)", "UHT-milk", "candy", "onions", "hair spray", "photo/film", "domestic eggs", "margarine", "shopping bags", "salt", "oil", "whipped/sour cream", "frozen vegetables", "sliced cheese", "dish cleaner", "baking powder", "specialty cheese", "salty snack", "Instant food products", "pet care", "white bread", "cling film/bags", "soap", "frozen chicken", "house keeping products", "decalcifier", "frozen dessert", "vinegar", "nuts/prunes", "potato products", "frozen fish", "light bulbs", "canned vegetables", "chewing gum", "canned fish", "cookware", "semi-finished bread", "cat food", "bathroom cleaner", "prosecco", "liver loaf", "zwieback", "canned fruit", "frozen fruits", "brandy", "baby cosmetics", "spices", "napkins", "waffles", "sauces", "rum", "chocolate marshmallow", "long life bakery product", "bags", "sweet spreads", "soups", "mustard", "instant coffee", "snack products", "organic sausage", "soft cheese", "dental care", "roll products ", "kitchen towels", "flower soil/fertilizer", "cereals", "meat spreads", "dishes", "male cosmetics", "candles", "whisky", "tidbits", "cooking chocolate", "seasonal products", "liqueur", "abrasive cleaner", "syrup", "ketchup", "rubbing alcohol", "cocoa drinks", "softener", "cake bar", "honey", "jam", "kitchen utensil", "flower (seeds)", "rice", "tea", "salad dressing", "specialty vegetables", "pudding powder", "ready soups", "make up remover", "toilet cleaner", "preservation products"]
 
 		# Adding dropoff bins that will each represent 1 order to be filled.
 		# Idea to have the far right coloumn on the grid be all dropoff points.
 		numberOfCells = ((self.width * self.height) - self.height)
 		for i in range(self.height):
-			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=generate_order(UniqueItems, MaxStockPerOrder, numberOfCells), displayMode=displayMode)
+			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=self.generate_order(UniqueItems, MaxStockPerOrder, numberOfCells), displayMode=displayMode)
 			self.grid.place_agent(DropOffCell, (DropOffCell.x, DropOffCell.y))
 
 			if displayMode:
@@ -63,7 +62,7 @@ class WarehouseModel(Model):
 					self.grid.place_agent(labelAgent, (labelAgent.x, labelAgent.y))
 
 		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
-		GridContents = allocate_items_to_grid(((self.width * self.height) - self.height))
+		GridContents = self.allocate_items_to_grid(((self.width * self.height) - self.height))
 		# Iterates over every cell in the grid
 		for Cellx in range(self.width - 1):
 			for Celly in range(self.height):
@@ -81,8 +80,8 @@ class WarehouseModel(Model):
 			# x, y = startingCell.pos
 			# Loop to create the new robots and to add them into a grid cell that is empty
 			while True:
-				x = random.randint(0, self.width - 2)
-				y = random.randint(0, self.height - 1)
+				x = self.random.randint(0, self.width - 2)
+				y = self.random.randint(0, self.height - 1)
 				# When the random values find an empty grid cell break the loop and place the robot
 				if len(self.grid.get_cell_list_contents((x, y))) == 1:
 					break
@@ -176,6 +175,25 @@ class WarehouseModel(Model):
 
 	def getTurnCount(self):
 		return self.turnCount
+
+	def allocate_items_to_grid(self, num_cells):
+		if num_cells < len(self.grocery_items):
+			grid = self.grocery_items[0:num_cells]
+		else:
+			grid = self.grocery_items + self.random.choices(self.grocery_items, k=num_cells - len(self.grocery_items))
+		grid.sort()
+		return grid
+
+	def generate_order(self, number_of_items=10, maxStockperItem=3, maxNum=10):
+		if maxNum < len(self.grocery_items):
+			items = self.random.choices(self.grocery_items[0:maxNum], k=number_of_items)
+		else:
+			items = self.random.choices(self.grocery_items, k=number_of_items)
+		items.sort()
+		order = {}
+		for item in items:
+			order.update({item: self.random.randint(1, maxStockperItem)})
+		return(order)
 
 	# Activates the scheduler to move all robots forward 1 step.
 	def step(self):
