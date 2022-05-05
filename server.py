@@ -93,12 +93,17 @@ def Apperance(agent):
 		else:
 			dropOffColour = agent.getPercentageDone()
 
+		if not model_params["displayMode"].value:
+			dropOffLayer = 'WarehouseFloor'
+		else:
+			dropOffLayer = 'Interaction'
+
 		# this.drawRectangle in the mesa library only draws diagonaly gradients, can try and turn to use only horizontal
 		# need to just change line 159 so it uses y1 = 0 not y1=y0+cellHeight
 
 		portrayal = {"Shape": "rect",
 			"Filled": "true",
-					"Layer": 'Interaction',
+					"Layer": dropOffLayer,
 					"Reference": agent.unique_id,
 					"Order": str(agent.order),
 					"Contains": str(agent.contains),
@@ -110,7 +115,7 @@ def Apperance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 10
+GridSize = 8
 enableCharts = True
 # enableCharts = False
 
@@ -119,7 +124,7 @@ model_params = {
 	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15) // 3, 1, (GridSize ** 2 - GridSize) // 3),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
-	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 20),
+	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 1, 1, 20),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
 	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
