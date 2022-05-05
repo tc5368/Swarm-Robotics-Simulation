@@ -81,6 +81,7 @@ def Apperance(agent):
 					"Layer": 'WarehouseFloor',
 					"Name": agent.unique_id,
 					"Color": 'White',
+					"text": agent.count,
 					"w": 1,
 					"h": 1,
 					"scale": 0.75}
@@ -110,15 +111,15 @@ def Apperance(agent):
 
 # Grid size and charts cannot be changed while running.
 GridSize = 10
-# enableCharts = True
-enableCharts = False
+enableCharts = True
+# enableCharts = False
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
 	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15) // 3, 1, (GridSize ** 2 - GridSize) // 3),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
-	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 100),
+	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 3, 1, 20),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
 	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
