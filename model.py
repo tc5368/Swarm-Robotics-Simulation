@@ -10,7 +10,11 @@ from mesa.datacollection import DataCollector
 
 
 class WarehouseModel(Model):
+	"""
+	A model for simulating robotic workers moving around a simulated warehouse fufilling customer orders.
+	"""
 	# This is the warehouse model works as the base controller to creat all of the robots
+
 	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode, displayMode):
 		# Allows the model to continue to run.
 		self.running = True
