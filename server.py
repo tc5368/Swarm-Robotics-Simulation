@@ -115,13 +115,13 @@ def Apperance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 8
+GridSize = 10
 enableCharts = True
 # enableCharts = False
 
 # # Added slides to be used but also for development will continue using default settings
 model_params = {
-	"robotCount": UserSettableParameter("slider", "Robot Initial Count", round((GridSize ** 2 - GridSize) * 0.15) // 3, 1, (GridSize ** 2 - GridSize) // 3),
+	"robotCount": UserSettableParameter("slider", "Robot Initial Count", (round((GridSize ** 2 - GridSize) * 0.15) // 3) + 1, 1, (GridSize ** 2 - GridSize) // 3),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 1, 1, 20),

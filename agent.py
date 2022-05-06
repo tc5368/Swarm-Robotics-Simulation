@@ -109,9 +109,21 @@ class Robot(Agent):
 								self.busy = False
 						# Until here
 					else:
-						self.x, self.y = self.route.pop(0)
+						# print('route:', self.route)
+						next_x, next_y = self.route.pop(0)
+						self.checkNextCellInRoute(next_x, next_y)
 						self.moveRobot()
 						# self.clearBooking()
+
+	def checkNextCellInRoute(self, x, y):
+		# print('checking', x, y)
+		if len(self.model.grid.get_cell_list_contents((x, y))) == 1:
+			# print('valid')
+			self.x, self.y = x, y
+		else:
+			self.route.insert(0, (x, y))
+			# print('invalid')
+			self.route = False
 
 	def clearBooking(self):
 		self.getBin(self.pos).clearBooking()
@@ -219,6 +231,7 @@ class Robot(Agent):
 					break
 				else:
 					beforeNode = parents[beforeNode]
+			self.route.pop(0)
 
 	def fixPath(self):
 		neighborCells = self.model.grid.get_neighborhood(self.pos, False)

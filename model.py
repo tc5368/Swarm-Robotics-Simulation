@@ -8,9 +8,9 @@ from mesa.time import *
 from mesa.space import *
 from mesa.datacollection import DataCollector
 
+
 class WarehouseModel(Model):
 	# This is the warehouse model works as the base controller to creat all of the robots
-
 	def __init__(self, robotCount, gridSize, UniqueItems, MaxStockPerOrder, pathFindingType, devMode, displayMode):
 		# Allows the model to continue to run.
 		self.running = True
@@ -30,7 +30,7 @@ class WarehouseModel(Model):
 			self.grid = MultiGrid(self.width, self.height, False)
 
 		# To be considered later, for now random activation means: "A scheduler which activates each agent once per step, in random order, with the order reshuffled every step."
-		self.schedule = SimultaneousActivation(self)
+		self.schedule = RandomActivation(self)
 
 		# Agents that need to be killed off after they crash into the wall, will be removed.
 		self.kill_agents = []
