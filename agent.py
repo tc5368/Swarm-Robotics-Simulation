@@ -43,7 +43,7 @@ class Robot(Agent):
 	def step(self):
 
 		if self.devMode:
-			if self.unique_id not in [0, 1]:
+			if self.unique_id != 0:
 				return
 
 		self.x, self.y = self.pos

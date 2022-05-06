@@ -14,22 +14,17 @@ def Apperance(agent):
 			robotImage = 'resources/Robot.png'
 		else:
 			robotImage = 'resources/Robot Busy.png'
-
 		robotColor = "Red"
 		robotLayer = 'Interaction'
-
 		if not model_params["displayMode"].value:
 			robotImage = 'rect'
 			robotLayer = 'WarehouseFloor'
-
 		if agent.holding == []:
 			robotColor = "Blue"
-
 		# if True:
 		if model_params["devMode"].value:
-			if agent.unique_id in [0, 1]:
+			if agent.unique_id == 0:
 				robotColor = "Orange"
-
 		portrayal = {"Shape": robotImage,
 					"Filled": "true",
 					"Color": robotColor,
@@ -40,15 +35,12 @@ def Apperance(agent):
 					"h": 0.6}
 
 	elif agent.type == "Bin":
-
 		if model_params["displayMode"].value:
 			formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
 			bin_image = "resources/" + formattedItem + ".png"
 		else:
 			bin_image = 'rect'
-
 		binColour = "grey"
-
 		portrayal = {"Shape": bin_image,
 					"Filled": "true",
 					"Layer": 'WarehouseFloor',
@@ -62,7 +54,6 @@ def Apperance(agent):
 					"scale": 0.75}
 
 	elif agent.type == "Floor":
-
 		portrayal = {"Shape": 'rect',
 					"Filled": "true",
 					"Layer": 'WarehouseFloor',
@@ -72,10 +63,8 @@ def Apperance(agent):
 					"scale": 1}
 
 	elif agent.type == "Label":
-
 		formattedItem = str(agent.item).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
 		label_image = "resources/" + formattedItem + ".png"
-
 		portrayal = {"Shape": label_image,
 					"Filled": "true",
 					"Layer": 'WarehouseFloor',
@@ -119,9 +108,9 @@ GridSize = 8
 enableCharts = True
 # enableCharts = False
 
-# # Added slides to be used but also for development will continue using default settings
+# # Added sliders
 model_params = {
-	"robotCount": UserSettableParameter("slider", "Robot Initial Count", (round((GridSize ** 2 - GridSize) * 0.15) // 3) + 1, 1, (GridSize ** 2 - GridSize) // 3),
+	"robotCount": UserSettableParameter("slider", "Robot Initial Count", (round((GridSize ** 2 - GridSize) * 0.15) // 3) + 1, 1, (GridSize ** 2 - GridSize) // 2),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 1, 1, 20),
@@ -130,30 +119,23 @@ model_params = {
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
 
+# Dynamic sizing so that all grid sizes will not affect the aspect ratio of the visulisation
 CellSize = 750 / GridSize
 GridSizeHeight = CellSize * GridSize
 GridSizeWidth = CellSize * (GridSize + model_params["UniqueItems"].value)
+
+# Uses a class from the visulisation module of MESA and initialises the appearance of the brower page
 grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"].value, model_params["gridSize"], GridSizeWidth, GridSizeHeight)
 
-# Generates the canvas, parameters of how many cells in x and y diretion then pixel size of grid.
-# grid = CanvasGrid(Apperance, model_params["gridSize"] + model_params["UniqueItems"], model_params["gridSize"], GridSizeWidth, GridSizeHeight)
-
-# Startes the visuliation using the given model, sets the page title and the model starting settings.
-#
-# server = ModularServer(WarehouseModel,[grid],"Robot Swarm Order Packing Simulation",
-# {"robotCount":RobotCount, "height":GridCellHeight, "width":GridCellWidth, "UniqueItems":UniqueItemsPerOrder,"MaxStockPerOrder":MaxStockPerOrder})
-
-
-chart_element_of = ChartModule([{"Label": "% Ordes Filled", "Color": "#AA0000"}])
-chart_element_im = ChartModule([{"Label": "Items Delivered", "Color": "#666666"}, {"Label": "Average Robot Moves", "Color": "#2BA7AD"}])
-
+# If the charts are enables will create the objects and then update the settings that will be passed to the brower
 if enableCharts:
+	chart_element_of = ChartModule([{"Label": "% Ordes Filled", "Color": "#AA0000"}])
+	chart_element_im = ChartModule([{"Label": "Items Delivered", "Color": "#666666"}, {"Label": "Average Robot Moves", "Color": "#2BA7AD"}])
 	settings = [grid, chart_element_of, chart_element_im]
 else:
 	settings = [grid]
 
+# Initialises the serrver object and launches it on default port 8521
 server = ModularServer(WarehouseModel, settings, "Robot Swarm Order Packing Simulation", model_params)
-
-# Launch the server
-server.port = 8521  # The default
+server.port = 8521
 server.launch()
