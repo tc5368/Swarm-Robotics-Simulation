@@ -48,6 +48,7 @@ class Robot(Agent):
 
 		self.x, self.y = self.pos
 
+		# print(self.model.openJobs)
 		if self.model.openJobs == []:
 			self.moveRandom()
 			return
@@ -121,8 +122,9 @@ class Robot(Agent):
 			# print('valid')
 			self.x, self.y = x, y
 		else:
-			self.route.insert(0, (x, y))
+			# self.route.insert(0, (x, y))
 			# print('invalid')
+			self.fixPath()
 			self.route = False
 
 	def clearBooking(self):
@@ -234,7 +236,7 @@ class Robot(Agent):
 			self.route.pop(0)
 
 	def fixPath(self):
-		neighborCells = self.model.grid.get_neighborhood(self.pos, False)
+		neighborCells = self.model.grid.get_neighborhood(self.pos, False, True)
 		validCells = []
 		for cell in neighborCells:
 			gridCellInfo = self.model.grid.get_cell_list_contents(cell)
@@ -244,7 +246,10 @@ class Robot(Agent):
 		cellCosts = {}
 		for i in validCells:
 			cellCosts.update({i.pos: self.getManhattenDistance(i.pos)})
-		bestOption = min(cellCosts, key=cellCosts.get)
+		if len(cellCosts) > 0:
+			bestOption = min(cellCosts, key=cellCosts.get)
+		else:
+			bestOption = self.pos
 		self.x, self.y = bestOption
 		self.moveRobot()
 
@@ -326,7 +331,6 @@ class Robot(Agent):
 		# print('randomly trying:', self.x, self.y, 'from ', self.pos)
 
 	def moveTowardsGoal(self):
-
 		# print('trying to get to goal: ', self.goal, 'from ', self.x, self.y)
 		if self.pos == self.goal:
 			if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'DropOff':

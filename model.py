@@ -51,9 +51,17 @@ class WarehouseModel(Model):
 
 		# Adding dropoff bins that will each represent 1 order to be filled.
 		# Idea to have the far right coloumn on the grid be all dropoff points.
+		
 		numberOfCells = ((self.width * self.height) - self.height)
+
 		for i in range(self.height):
-			DropOffCell = DropOffPoint('Drop off point ' + str(i), self, x=self.width - 1, y=i, order=self.generate_order(UniqueItems, MaxStockPerOrder, numberOfCells), displayMode=displayMode)
+			DropOffCell = DropOffPoint('Drop off point ' + str(i),
+										self,
+										x=self.width - 1,
+										y=i,
+										order=self.generate_order(UniqueItems, MaxStockPerOrder, numberOfCells),
+										displayMode=displayMode)
+
 			self.grid.place_agent(DropOffCell, (DropOffCell.x, DropOffCell.y))
 
 			if displayMode:
@@ -69,7 +77,7 @@ class WarehouseModel(Model):
 					labelAgent = Label(item, self, x=self.width + ix, y=i, item=item, count=count)
 					self.grid.place_agent(labelAgent, (labelAgent.x, labelAgent.y))
 
-		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding and it's stock level.
+		# Adding a static agent to every cell, they allow mouseover information about what the cell is holding
 		GridContents = self.allocate_items_to_grid(((self.width * self.height) - self.height))
 		# Iterates over every cell in the grid
 		for Cellx in range(self.width - 1):
@@ -85,7 +93,6 @@ class WarehouseModel(Model):
 		# Creating the Robots
 		for i in range(self.num_agents):
 			# Creates the robots starting at random points on the warehouse floor.
-			# x, y = startingCell.pos
 			# Loop to create the new robots and to add them into a grid cell that is empty
 			while True:
 				x = self.random.randint(0, self.width - 2)
@@ -94,19 +101,19 @@ class WarehouseModel(Model):
 				if len(self.grid.get_cell_list_contents((x, y))) == 1:
 					break
 
-			newRobot = Robot(i, self, y=y, x=x, gridInfo=[self.height, self.width], pathFindingType=pathFindingType, devMode=devMode)
+			newRobot = Robot(i,
+							self,
+							y=y,
+							x=x,
+							gridInfo=[self.height, self.width],
+							pathFindingType=pathFindingType,
+							devMode=devMode)
+
 			# Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
 
-			# THIS IS FOR TESTING NOT STAYING IN
-			#
-			#
-			#
-			#
-			#  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-			#
-			#
-			#
+			# If in example mode then robots that don't move need to have items they start
+			# on top of removed from all the orders.
 			if devMode:
 				cell = self.grid.get_cell_list_contents((newRobot.x, newRobot.y))[0]
 				toRemove = cell.peekItem()
@@ -114,24 +121,17 @@ class WarehouseModel(Model):
 					gridCell = self.grid.get_cell_list_contents((self.width - 1, Celly))[0]
 					if toRemove in gridCell.order:
 						gridCell.order.pop(toRemove)
-			#
-			#
-			#
-			#
-			#  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-			#
-			#
-			#
-			#
-			# UNTIL HERE
 
 			# Adds the robot to the grid according to its starting coordinates
 			self.grid.place_agent(newRobot, (newRobot.x, newRobot.y))
-			#
+
+			# Starting the data collectors
 			self.datacollector = DataCollector({
 				"% Ordes Filled": lambda m: self.countComplete(),
 				"Items Delivered": lambda m: self.getItemsDelivered(),
 				"Average Robot Moves": lambda m: self.getAvgRobotMoves()})
+
+		self.step()
 
 	def testComplete(self):
 		for i in range(self.height):
