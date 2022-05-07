@@ -41,6 +41,8 @@ def Apperance(agent):
 		else:
 			bin_image = 'rect'
 		binColour = "grey"
+		if agent.bookings != {}:
+			binColour = 'green'
 		portrayal = {"Shape": bin_image,
 					"Filled": "true",
 					"Layer": 'WarehouseFloor',
