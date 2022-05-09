@@ -354,7 +354,6 @@ class Robot(Agent):
 		# print(prob_x, prob_y)
 		direction = self.model.random.choices([True, False], (prob_x, prob_y))[0]
 		# print(direction)
-
 		if direction:
 			if self.goal[0] > self.x:
 				self.x += 1
@@ -369,8 +368,8 @@ class Robot(Agent):
 	def pickupItem(self):
 		# Gets the cell it's currently in's contents and then select the cell object which is first in the list hence [0]
 		# It then calls the cell objects giveItem function and takes the output of that as it's new inventory.
-		if self.model.grid.get_cell_list_contents(self.pos)[0].type == 'Bin':
-			self.holding = self.model.grid.get_cell_list_contents(self.pos)[0].giveItem()
+		cell = self.getBin(self.pos)
+		self.holding = cell.giveItem()
 
 	def dropOff(self):
 		# For dropping into a bin
