@@ -106,7 +106,7 @@ def Apperance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 8
+GridSize = 15
 enableCharts = True
 # enableCharts = False
 
