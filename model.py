@@ -103,13 +103,7 @@ class WarehouseModel(Model):
 				if len(self.grid.get_cell_list_contents((x, y))) == 1:
 					break
 
-			newRobot = Robot(i,
-							self,
-							y=y,
-							x=x,
-							gridInfo=[self.height, self.width],
-							pathFindingType=pathFindingType,
-							devMode=devMode)
+			newRobot = Robot(i, self, y=y, x=x, gridInfo=[self.height, self.width], pathFindingType=pathFindingType, devMode=devMode)
 
 			# Adds the new robot to the scheduler
 			self.schedule.add(newRobot)
@@ -212,7 +206,7 @@ class WarehouseModel(Model):
 		self.datacollector.collect(self)
 
 		if self.testComplete():
-			
+
 			self.running = False
 
 		self.getOpenJobs()
