@@ -50,6 +50,7 @@ class Robot(Agent):
 
 		# print(self.model.openJobs)
 		if self.model.openJobs == []:
+			# self.moveRandomLeft()
 			self.moveRandom()
 			return
 
@@ -329,6 +330,14 @@ class Robot(Agent):
 		else:
 			self.y += self.random.randint(-1, 1)
 		# print('randomly trying:', self.x, self.y, 'from ', self.pos)
+
+	def moveRandomLeft(self):
+		print('triggered')
+		# print('trying to move randomly to break lock')
+		if self.random.choices([True, False], (0.8, 0.2)):
+			self.x += self.random.choices([-1, 1], (0.9, 0.1))[0]
+		else:
+			self.y += self.random.randint(-1, 1)
 
 	def moveTowardsGoal(self):
 		# print('trying to get to goal: ', self.goal, 'from ', self.x, self.y)

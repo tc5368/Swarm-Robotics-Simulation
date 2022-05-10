@@ -212,6 +212,7 @@ class WarehouseModel(Model):
 		self.datacollector.collect(self)
 
 		if self.testComplete():
+			
 			self.running = False
 
 		self.getOpenJobs()
