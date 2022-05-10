@@ -144,6 +144,14 @@ class WarehouseModel(Model):
 				count += 1
 		return (count / self.height) * 100
 
+	def getOrderLength(self):
+		count = 0
+		for i in range(self.height):
+			orderVal = self.grid.get_cell_list_contents((self.width - 1, i))[0].order.values()
+			for ix in orderVal:
+				count += ix
+		return count
+
 	def getItemsDelivered(self):
 		return self.itemsDelivered
 
@@ -206,7 +214,7 @@ class WarehouseModel(Model):
 		self.datacollector.collect(self)
 
 		if self.testComplete():
-
+			print(self.getOrderLength())
 			self.running = False
 
 		self.getOpenJobs()
