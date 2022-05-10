@@ -214,7 +214,7 @@ class WarehouseModel(Model):
 		self.datacollector.collect(self)
 
 		if self.testComplete():
-			print(self.getOrderLength())
+			# print(self.getOrderLength())
 			self.running = False
 
 		self.getOpenJobs()

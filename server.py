@@ -106,18 +106,18 @@ def Apperance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 5
+GridSize = 10
 # enableCharts = True
 enableCharts = False
 
 # # Added sliders
 model_params = {
-	"robotCount": UserSettableParameter("slider", "Robot Initial Count", (round((GridSize ** 2 - GridSize) * 0.15) // 3) + 1, 1, (GridSize ** 2 - GridSize) // 2),
+	"robotCount": UserSettableParameter("slider", "Robot Initial Count", (round((GridSize ** 2 - GridSize) * 0.15) // 3) + 1, 1, (GridSize ** 2 - GridSize)),
 	"gridSize": GridSize,
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 1, 1, 20),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
-	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
+	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
 
