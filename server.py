@@ -10,105 +10,123 @@ from mesa.visualization.UserParam import UserSettableParameter
 def Apperance(agent):
 	# Changes the robots colour based on the task it is undertaking
 	if agent.type == "Robot":
-		if agent.holding == []:
-			robotImage = 'resources/Robot.png'
-		else:
-			robotImage = 'resources/Robot Busy.png'
-		robotColor = "Red"
-		robotLayer = 'Interaction'
-		if not model_params["displayMode"].value:
-			robotImage = 'rect'
-			robotLayer = 'WarehouseFloor'
-		if agent.holding == []:
-			robotColor = "Blue"
-		# if True:
-		if model_params["devMode"].value:
-			if agent.unique_id == 0:
-				robotColor = "Orange"
-		portrayal = {"Shape": robotImage,
-					"Filled": "true",
-					"Color": robotColor,
-					"Layer": robotLayer,
-					"Number": agent.unique_id,
-					"Carrying": agent.holding,
-					"w": 0.6,
-					"h": 0.6}
+		return robotAppearance(agent)
 
 	elif agent.type == "Bin":
-		if model_params["displayMode"].value:
-			formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
-			bin_image = "resources/" + formattedItem + ".png"
-		else:
-			bin_image = 'rect'
-		binColour = "grey"
-		if agent.bookings != {}:
-			binColour = 'green'
-		portrayal = {"Shape": bin_image,
-					"Filled": "true",
-					"Layer": 'WarehouseFloor',
-					"Reference": agent.unique_id,
-					"Contains": agent.contains,
-					# "Stock": agent.stock,
-					"Bookings": str(agent.bookings),
-					"Color": binColour,
-					"w": 1,
-					"h": 1,
-					"scale": 0.75}
+		return binAppearance(agent)
 
 	elif agent.type == "Floor":
-		portrayal = {"Shape": 'rect',
-					"Filled": "true",
-					"Layer": 'WarehouseFloor',
-					"Color": 'grey',
-					"w": 1,
-					"h": 1,
-					"scale": 1}
+		return floorAppearance(agent)
 
 	elif agent.type == "Label":
-		formattedItem = str(agent.item).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
-		label_image = "resources/" + formattedItem + ".png"
-		portrayal = {"Shape": label_image,
-					"Filled": "true",
-					"Layer": 'WarehouseFloor',
-					"Name": agent.unique_id,
-					"Color": 'White',
-					"text": agent.count,
-					"w": 1,
-					"h": 1,
-					"scale": 0.75}
+		return labelAppearance(agent)
 
 	elif agent.type == "DropOff":
+		return dropOffAppearance(agent)
 
-		if agent.checkComplete():
-			dropOffColour = "Green"
-		else:
-			dropOffColour = agent.getPercentageDone()
 
-		if not model_params["displayMode"].value:
-			dropOffLayer = 'WarehouseFloor'
-		else:
-			dropOffLayer = 'Interaction'
+def robotAppearance(agent):
+	if agent.holding == []:
+		robotImage = 'resources/Robot.png'
+	else:
+		robotImage = 'resources/Robot Busy.png'
+	robotColor = "Red"
+	robotLayer = 'Interaction'
+	if not model_params["displayMode"].value:
+		robotImage = 'rect'
+		robotLayer = 'WarehouseFloor'
+	if agent.holding == []:
+		robotColor = "Blue"
+	# if True:
+	if model_params["devMode"].value:
+		if agent.unique_id == 0:
+			robotColor = "Orange"
+	portrayal = {"Shape": robotImage,
+				"Filled": "true",
+				"Color": robotColor,
+				"Layer": robotLayer,
+				"Number": agent.unique_id,
+				"Carrying": agent.holding,
+				"w": 0.6,
+				"h": 0.6}
+	return portrayal
 
-		# this.drawRectangle in the mesa library only draws diagonaly gradients, can try and turn to use only horizontal
-		# need to just change line 159 so it uses y1 = 0 not y1=y0+cellHeight
 
-		portrayal = {"Shape": "rect",
+def binAppearance(agent):
+	if model_params["displayMode"].value:
+		formattedItem = str(agent.contains[0]).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
+		bin_image = "resources/" + formattedItem + ".png"
+	else:
+		bin_image = 'rect'
+	binColour = "grey"
+	if agent.bookings != {}:
+		binColour = 'green'
+	portrayal = {"Shape": bin_image,
+				"Filled": "true",
+				"Layer": 'WarehouseFloor',
+				"Reference": agent.unique_id,
+				"Contains": agent.contains,
+				"Bookings": str(agent.bookings),
+				"Color": binColour,
+				"w": 1,
+				"h": 1,
+				"scale": 0.75}
+	return portrayal
+
+
+def floorAppearance(agent):
+	portrayal = {"Shape": 'rect',
 			"Filled": "true",
-					"Layer": dropOffLayer,
-					"Reference": agent.unique_id,
-					"Order": str(agent.order),
-					"Contains": str(agent.contains),
-					"Color": dropOffColour,
-					"w": 1,
-					"h": 1}
+			"Layer": 'WarehouseFloor',
+			"Color": 'grey',
+			"w": 1,
+			"h": 1,
+			"scale": 1}
+	return portrayal
 
+
+def labelAppearance(agent):
+	formattedItem = str(agent.item).replace(' ', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
+	label_image = "resources/" + formattedItem + ".png"
+	portrayal = {"Shape": label_image,
+				"Filled": "true",
+				"Layer": 'WarehouseFloor',
+				"Name": agent.unique_id,
+				"Color": 'White',
+				"text": agent.count,
+				"w": 1,
+				"h": 1,
+				"scale": 0.75}
+	return portrayal
+
+
+def dropOffAppearance(agent):
+	if agent.checkComplete():
+		dropOffColour = "Green"
+	else:
+		dropOffColour = agent.getPercentageDone()
+
+	if not model_params["displayMode"].value:
+		dropOffLayer = 'WarehouseFloor'
+	else:
+		dropOffLayer = 'Interaction'
+
+	portrayal = {"Shape": "rect",
+		"Filled": "true",
+				"Layer": dropOffLayer,
+				"Reference": agent.unique_id,
+				"Order": str(agent.order),
+				"Contains": str(agent.contains),
+				"Color": dropOffColour,
+				"w": 1,
+				"h": 1}
 	return portrayal
 
 
 # Grid size and charts cannot be changed while running.
 GridSize = 10
-enableCharts = True
-# enableCharts = False
+# enableCharts = True
+enableCharts = False
 
 # # Added sliders
 model_params = {
