@@ -107,8 +107,8 @@ def Apperance(agent):
 
 # Grid size and charts cannot be changed while running.
 GridSize = 10
-# enableCharts = True
-enableCharts = False
+enableCharts = True
+# enableCharts = False
 
 # # Added sliders
 model_params = {
@@ -117,7 +117,7 @@ model_params = {
 	"UniqueItems": UserSettableParameter("slider", "Unique Items Per Order", 10, 1, 10),
 	"MaxStockPerOrder": UserSettableParameter("slider", "Maximum of a stock per order", 1, 1, 20),
 	"devMode": UserSettableParameter('checkbox', 'Example Mode', value=False),
-	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=False),
+	"displayMode": UserSettableParameter('checkbox', 'Display Mode', value=True),
 	"pathFindingType": UserSettableParameter('choice', 'Pathfinding Type', value='Path Finding', choices=['Path Finding', 'Blind Goal'])
 }
 

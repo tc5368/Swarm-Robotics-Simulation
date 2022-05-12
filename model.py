@@ -46,7 +46,7 @@ class WarehouseModel(Model):
 		self.itemsDelivered = 0
 		self.robotMoves = 0
 
-		self.random.seed(1)
+		# self.random.seed(1)
 
 
 		self.grocery_items = ["tropical fruit", "whole milk", "pip fruit", "other vegetables", "rolls/buns", "pot plants", "citrus fruit", "beef", "frankfurter", "chicken", "butter", "fruit/vegetable juice", "packaged fruit/vegetables", "chocolate", "specialty bar", "butter milk", "bottled water", "yogurt", "sausage", "brown bread", "hamburger meat", "root vegetables", "pork", "pastry", "canned beer", "berries", "coffee", "misc. beverages", "ham", "turkey", "curd cheese", "red/blush wine", "frozen potato products", "flour", "sugar", "frozen meals", "herbs", "soda", "detergent", "grapes", "processed cheese", "fish", "sparkling wine", "newspapers", "pasta", "popcorn", "beverages", "bottled beer", "dessert", "dog food", "specialty chocolate", "condensed milk", "cleaner", "white wine", "meat", "ice cream", "hard cheese", "cream cheese ", "liquor", "pickled vegetables", "liquor (appetizer)", "UHT-milk", "candy", "onions", "hair spray", "photo/film", "domestic eggs", "margarine", "shopping bags", "salt", "oil", "whipped/sour cream", "frozen vegetables", "sliced cheese", "dish cleaner", "baking powder", "specialty cheese", "salty snack", "Instant food products", "pet care", "white bread", "cling film/bags", "soap", "frozen chicken", "house keeping products", "decalcifier", "frozen dessert", "vinegar", "nuts/prunes", "potato products", "frozen fish", "light bulbs", "canned vegetables", "chewing gum", "canned fish", "cookware", "semi-finished bread", "cat food", "bathroom cleaner", "prosecco", "liver loaf", "zwieback", "canned fruit", "frozen fruits", "brandy", "baby cosmetics", "spices", "napkins", "waffles", "sauces", "rum", "chocolate marshmallow", "long life bakery product", "bags", "sweet spreads", "soups", "mustard", "instant coffee", "snack products", "organic sausage", "soft cheese", "dental care", "roll products ", "kitchen towels", "flower soil/fertilizer", "cereals", "meat spreads", "dishes", "male cosmetics", "candles", "whisky", "tidbits", "cooking chocolate", "seasonal products", "liqueur", "abrasive cleaner", "syrup", "ketchup", "rubbing alcohol", "cocoa drinks", "softener", "cake bar", "honey", "jam", "kitchen utensil", "flower (seeds)", "rice", "tea", "salad dressing", "specialty vegetables", "pudding powder", "ready soups", "make up remover", "toilet cleaner", "preservation products"]
@@ -144,14 +144,6 @@ class WarehouseModel(Model):
 				count += 1
 		return (count / self.height) * 100
 
-	def getOrderLength(self):
-		count = 0
-		for i in range(self.height):
-			orderVal = self.grid.get_cell_list_contents((self.width - 1, i))[0].order.values()
-			for ix in orderVal:
-				count += ix
-		return count
-
 	def getItemsDelivered(self):
 		return self.itemsDelivered
 
@@ -159,6 +151,14 @@ class WarehouseModel(Model):
 		averageStepsPerRobot = self.robotMoves // self.num_agents
 		# print(averageStepsPerRobot)
 		return averageStepsPerRobot
+
+	def getOrderLength(self):
+		count = 0
+		for i in range(self.height):
+			orderVal = self.grid.get_cell_list_contents((self.width - 1, i))[0].order.values()
+			for ix in orderVal:
+				count += ix
+		return count
 
 	def getItemLocation(self, item):
 		for Cellx in range(self.width - 1):
