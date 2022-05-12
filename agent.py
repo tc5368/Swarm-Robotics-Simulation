@@ -385,7 +385,6 @@ class Robot(Agent):
 		cell = self.getBin(self.pos)
 		# print(self.holding, self.pos, self.goal, self.unique_id, self.tasks)
 		if cell.recieveItem(self.holding[0]):
-			self.model.itemsDelivered += 1
 			self.holding = []
 			self.busy = False
 

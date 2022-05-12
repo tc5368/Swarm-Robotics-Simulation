@@ -53,6 +53,7 @@ class DropOffPoint(Agent):
 				self.contains.update({item: 1})
 				if self.displayMode:
 					self.updateLabels()
+			self.model.itemsDelivered += 1
 			return True
 		else:
 			return False
