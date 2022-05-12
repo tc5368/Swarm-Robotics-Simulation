@@ -46,6 +46,7 @@ class WarehouseModel(Model):
 		self.itemsDelivered = 0
 		self.robotMoves = 0
 
+		self.devMode = devMode
 		# self.random.seed(1)
 
 
@@ -149,6 +150,8 @@ class WarehouseModel(Model):
 
 	def getAvgRobotMoves(self):
 		averageStepsPerRobot = self.robotMoves // self.num_agents
+		if self.devMode:
+			averageStepsPerRobot = self.robotMoves
 		# print(averageStepsPerRobot)
 		return averageStepsPerRobot
 

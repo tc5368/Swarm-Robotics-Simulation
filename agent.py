@@ -115,7 +115,8 @@ class Robot(Agent):
 						next_x, next_y = self.route.pop(0)
 						self.checkNextCellInRoute(next_x, next_y)
 						self.moveRobot()
-						# self.clearBooking()
+						if self.devMode:
+							self.clearBooking()
 
 	def checkNextCellInRoute(self, x, y):
 		# print('checking', x, y)
@@ -135,7 +136,8 @@ class Robot(Agent):
 		parents = self.pathFind()
 		self.getRouteFromParents(parents)
 		# print(self.route)
-		# self.bookRoute()
+		if self.devMode:
+			self.bookRoute()
 		# print()
 
 	def bookRoute(self):
