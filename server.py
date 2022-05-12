@@ -8,7 +8,6 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 
 def Apperance(agent):
-	# Changes the robots colour based on the task it is undertaking
 	if agent.type == "Robot":
 		return robotAppearance(agent)
 
@@ -26,21 +25,24 @@ def Apperance(agent):
 
 
 def robotAppearance(agent):
-	if agent.holding == []:
-		robotImage = 'resources/Robot.png'
+	if model_params["displayMode"].value:
+		if agent.holding == []:
+			robotImage = 'resources/Robot.png'
+		else:
+			robotImage = 'resources/Robot Busy.png'
+		robotLayer = 'Interaction'
 	else:
-		robotImage = 'resources/Robot Busy.png'
-	robotColor = "Red"
-	robotLayer = 'Interaction'
-	if not model_params["displayMode"].value:
 		robotImage = 'rect'
 		robotLayer = 'WarehouseFloor'
+
 	if agent.holding == []:
 		robotColor = "Blue"
-	# if True:
-	if model_params["devMode"].value:
-		if agent.unique_id == 0:
-			robotColor = "Orange"
+	else:
+		robotColor = "Red"
+
+	if model_params["devMode"].value and agent.unique_id == 0:
+		robotColor = "Orange"
+
 	portrayal = {"Shape": robotImage,
 				"Filled": "true",
 				"Color": robotColor,
@@ -58,9 +60,12 @@ def binAppearance(agent):
 		bin_image = "resources/" + formattedItem + ".png"
 	else:
 		bin_image = 'rect'
-	binColour = "grey"
+
 	if agent.bookings != {}:
 		binColour = 'green'
+	else:
+		binColour = "grey"
+
 	portrayal = {"Shape": bin_image,
 				"Filled": "true",
 				"Layer": 'WarehouseFloor',
@@ -106,13 +111,13 @@ def dropOffAppearance(agent):
 	else:
 		dropOffColour = agent.getPercentageDone()
 
-	if not model_params["displayMode"].value:
-		dropOffLayer = 'WarehouseFloor'
-	else:
+	if model_params["displayMode"].value:
 		dropOffLayer = 'Interaction'
+	else:
+		dropOffLayer = 'WarehouseFloor'
 
 	portrayal = {"Shape": "rect",
-		"Filled": "true",
+				"Filled": "true",
 				"Layer": dropOffLayer,
 				"Reference": agent.unique_id,
 				"Order": str(agent.order),
