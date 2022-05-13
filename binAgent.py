@@ -40,8 +40,8 @@ class Bin(Agent):
 		return self.contains
 
 	def clearBooking(self):
-		print(self.bookings)
-		print(self.model.getTurnCount())
+		# print(self.bookings)
+		# print(self.model.getTurnCount())
 		self.bookings.pop(self.model.getTurnCount())
 
 	def peekItem(self):
