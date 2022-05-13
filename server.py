@@ -129,9 +129,9 @@ def dropOffAppearance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 5
-enableCharts = True
-# enableCharts = False
+GridSize = 10
+# enableCharts = True
+enableCharts = False
 
 # # Added sliders
 model_params = {
