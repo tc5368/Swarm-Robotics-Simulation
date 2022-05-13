@@ -98,7 +98,7 @@ def labelAppearance(agent):
 				"Layer": 'WarehouseFloor',
 				"Name": agent.unique_id,
 				"Color": 'White',
-				"text": agent.count,
+				"text": agent.itemCount,
 				"w": 1,
 				"h": 1,
 				"scale": 0.75}
@@ -129,7 +129,7 @@ def dropOffAppearance(agent):
 
 
 # Grid size and charts cannot be changed while running.
-GridSize = 10
+GridSize = 14
 enableCharts = True
 # enableCharts = False
 

@@ -61,6 +61,15 @@ class DropOffPoint(Agent):
 	def updateLabels(self):
 		for item in self.order:
 			if item in self.contains:
+				for ix in range(1, len(self.order) + 1):
+					labelAgent = self.model.grid.get_cell_list_contents((self.pos[0] + ix, self.pos[1]))
+					if len(labelAgent) < 2:
+						continue
+					else:
+						labelAgent = labelAgent[1]
+
+						if labelAgent.item == item:
+							labelAgent.itemCount -= 1
 				if self.contains[item] == self.order[item]:
 					self.clearItem(item)
 

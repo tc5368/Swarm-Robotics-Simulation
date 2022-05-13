@@ -15,7 +15,7 @@ class Label(Agent):
 		self.type = "Label"
 
 		self.item = item
-		self.count = count
+		self.itemCount = count
 
 	def getComplete(self):
 		return False
