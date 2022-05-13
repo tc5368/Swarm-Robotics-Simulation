@@ -244,7 +244,7 @@ class Robot(Agent):
 		for cell in neighborCells:
 			gridCellInfo = self.model.grid.get_cell_list_contents(cell)
 			if len(gridCellInfo) == 1:
-				if gridCellInfo[0].type in ['DropOff','Bin']:
+				if gridCellInfo[0].type in ['DropOff', 'Bin']:
 					validCells.append(gridCellInfo[0])
 
 		cellCosts = {}
